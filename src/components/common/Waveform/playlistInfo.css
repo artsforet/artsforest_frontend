@@ -1,0 +1,30 @@
+
+.music-bar {
+    width: 100%;
+    position: fixed;
+    bottom: 0;
+    background: black;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    z-index: 10;
+    text-align: center;
+    justify-content: center;
+    border-top: 1px solid #333;
+  }
+  
+  
+  #current-song-info {
+    display: flex;
+    align-items: center;
+    text-align: start;
+    justify-content: center;
+  }
+  
+  #current-song-info {
+    display: flex;
+    align-items: center;
+  }
+  
+  
+  
