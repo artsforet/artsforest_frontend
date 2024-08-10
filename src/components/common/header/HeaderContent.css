@@ -1,4 +1,4 @@
- 
+/* 
 a {
   color: white;
   text-decoration: none;
@@ -629,3 +629,4 @@ a {
 .header-nav_menu:nth-child(4):hover ~ .header-nav_bar {
 	right : 20%;
 }
+*/

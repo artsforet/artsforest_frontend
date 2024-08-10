@@ -15,7 +15,7 @@ export const useUserStore = defineStore('user', {
   actions: {
     async fetchUser(userId: number) {
       const token = localStorage.getItem('token');
-      const response = await axios.get(`http://localhost:8000/auth/${userId}`, {
+      const response = await axios.get(`http://localhost:80/auth/${userId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       this.user = response.data;
@@ -24,19 +24,19 @@ export const useUserStore = defineStore('user', {
     async fetchOrCreatePlaylists() {
       const token = localStorage.getItem('token');
       const headers = { Authorization: `Bearer ${token}` };
-      const response = await axios.get(`http://localhost:8000/playlists`, { headers });
+      const response = await axios.get(`http://localhost:80/playlists`, { headers });
       this.playlists = response.data;
     },
     async createPlaylist(name: string) {
       const token = localStorage.getItem('token');
-      const response = await axios.post('http://localhost:8000/playlist', { name }, {
+      const response = await axios.post('http://localhost:80/playlist', { name }, {
         headers: { Authorization: `Bearer ${token}` },
       });
       this.playlists.push(response.data);
     },
     async addMusicToPlaylist(playlistId: number, musicId: number) {
       const token = localStorage.getItem('token');
-      const response = await axios.post(`http://localhost:8000/playlist/1/music`, { musicId }, {
+      const response = await axios.post(`http://localhost:80/playlist/1/music`, { musicId }, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const playlist = this.playlists.find(pl => pl.id === playlistId);
@@ -70,7 +70,7 @@ export const useUserStore = defineStore('user', {
       }
       let defaultPlaylist = this.playlists.find(playlist => playlist.name === 'Default Playlist');
       if (!defaultPlaylist) {
-        const response = await axios.post(`http://localhost:8000/playlists`, { name: 'Default Playlist' }, {
+        const response = await axios.post(`http://localhost:80/playlists`, { name: 'Default Playlist' }, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }

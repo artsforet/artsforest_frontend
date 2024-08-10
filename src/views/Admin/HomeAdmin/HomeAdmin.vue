@@ -1,7 +1,6 @@
 <template>
 <div class='home-admin'>
     <div class='home-admin-container'>
-    asd
     <span v-for="song in musicData" :key="song.id">
         {{song}}
     </span>
@@ -36,9 +35,10 @@ onMounted(()=> {
 <style scoped>
 .home-admin {
     width: 100%;
-    height: 100vh;
+    height: 200vh;
     background-color: black;
     color: white;
+    
 }
 .home-admin-container {
     color: white;

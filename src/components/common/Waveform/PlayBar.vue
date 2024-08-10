@@ -2,8 +2,15 @@
   <div class="music-bar">
     <div id="current-song-info" style="justify-content:">
       <div class="current-song-info">
-        <button @click="playPause" class="button-custom" style="font-size:50px;">
+        <!-- <button @click="playPause" class="button-custom" style="font-size:50px;">
           <i :class="isPlaying ? 'bi-pause-fill' : 'bi-play-fill'" style="font-size: 50px;"></i>
+        </button> -->
+
+
+        <button @click="playPause" class="button-custom">
+          <img src="@/assets/icons/music/play01.png" v-if="!isPlaying" style="width: 30px" />
+          <img src="@/assets/icons/music/pause01.png"  v-if="isPlaying" style="width: 30px"/>
+          <!-- <i class="bi bi-pause-fill" v-if="isPlaying(song)"></i> -->
         </button>
 
         <div class="current-song-info-text">
@@ -19,8 +26,8 @@
 
       <div class="musicbar-center">
         <div class="time-info">
-          <div>{{ formatTime(currentTime) }} / </div>  &nbsp;
-          <div>{{ formatTime(duration) }}</div>
+          <div> {{ formatTime(currentTime) }} / </div> &nbsp;
+          <div> {{ formatTime(duration) }} </div> 
         </div>
 
         <div id="waveform" v-show="eventBus.selectedSong"></div>
@@ -103,7 +110,7 @@ const duration = ref(0);
 const initModal = async () => {
   try {
     const token = localStorage.getItem('token');
-    const response = await axios.get('http://localhost:8000/playlist/userplayer', {
+    const response = await axios.get('http://localhost:80/playlist/userplayer', {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -323,6 +330,9 @@ onBeforeUnmount(() => {
 
 .button-custom {
   margin-right: 20px;
+  background: transparent;
+  border: none;
+  color: white;
 }
 
 .playlist-modal {

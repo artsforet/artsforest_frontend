@@ -1,14 +1,15 @@
 <template>
   <div class='song-admin-container'>
-    <!-- <CreatePost @new-post="addPost" /> -->
     <br /><br />
-    <div class='table-container'>
-      <h1>큐레이션 앨범 등록</h1> <br /><br />
+     <h3 style="color: white;">큐레이션 등록</h3> <br /><br />
      <div class="curatin-update-info">
-        <input type="text" v-model="albumName" placeholder="큐레이션 제목을 입력해주세요." />
+        <input type="text" v-model="albumName" placeholder="큐레이션 제목을 입력해주세요." class='curation-create-title' />
         <br />
         <input type="file" @change="onFileChange" />
       </div>
+    <div class='table-container'>
+     
+      <br /><br /><br />
     <table>
       <thead>
         <tr>
@@ -17,27 +18,29 @@
           <th>노래 제목</th>
         </tr>
       </thead>
-      <tbody>
-        <tr v-for="song in songs" :key="song.id" style="width: 100%; border-top: 1px solid #888; padding: 10px 0">
+      <tbody v-if="songs">
+        <tr v-for="song in songs" :key="song.id">
           <td><input type="checkbox" :value="song" v-model="selectedSongs" /> </td>
           <td> <img :src="song.cover" alt="이미지" style="width: 50px;" /></td>
           <td> {{ song.title }} by {{ song.artist }} </td>
         </tr>
-          <!-- <td>
-            <button @click="deletePost(index)">삭제</button>
-          </td> -->
-        <!-- </tr> -->
       </tbody>
     </table>
     </div>
-     <button @click="createAlbum" :disabled="!selectedSongs.length || !albumName || !albumCover">Create Album</button>
+    <div class='table-container'>
+    <br /><br /><br /><br />
+
+    <button
+      class='curation-create-button' 
+      @click="createAlbum"  > 큐레이션 등록</button>
     <p v-if="albumCreatedMessage">{{ albumCreatedMessage }}</p>
+    </div>
+
   </div>
 </template>
 
 <script>
 import axios from 'axios';
-
 export default {
   data() {
     return {
@@ -54,7 +57,7 @@ export default {
   methods: {
     async fetchSongs() {
       try {
-        const response = await axios.get('http://localhost:8000/music');
+        const response = await axios.get('http://localhost:80/music');
         this.songs = response.data;
       } catch (error) {
         console.error('Failed to fetch songs:', error);
@@ -74,7 +77,7 @@ export default {
       });
 
       try {
-        const response = await axios.post('http://localhost:8000/music/curation/create', formData, {
+        const response = await axios.post('http://localhost:80/music/curation/create', formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -92,36 +95,74 @@ export default {
 };
 </script>
 
-<style>
-table {
-  width: 100%;
-  border-collapse: collapse;
+<style scoped>
+th, td {
+  padding: 10px 8px;
+  max-width: 200px; /* 각 td의 최대 너비를 지정 */
+  text-overflow: ellipsis; /* 텍스트가 길 경우 생략(...) 처리 */
+  white-space: nowrap; /* 텍스트가 한 줄로 표시되도록 설정 */
+  overflow: hidden; /* 넘치는 텍스트는 숨김 */
 }
+  vertical-align: middle; /* 텍스트 가운데 정렬 */
+
+table {
+  table-layout: fixed; /* 테이블 셀의 너비를 고정 */
+}
+
 .table-container {
-  width: 1200px;
-  max-height: 600px; /* 최대 높이 설정 */
+  max-height: 500px;
   overflow-y: auto; /* 수직 스크롤 가능 */
   margin: 0 auto;
+  text-align: center;
+  justify-content: center;
 }
-th, td {
-  /* border: 1px solid #ddd; */
-  padding: 8px;
-}
+
 th {
   color: white;
 }
 
 .song-admin-container {
-  background-color: #171717;
+  width: 80%; /* 부모 컨테이너의 너비를 브라우저 크기에 비례하도록 설정 */
+  max-width: 1400px;
+  height: 1000px;
   color: white;
+  margin: 0 auto;
+  text-align: center;
+  justify-content: center;
 }
 
-.curatin-update-info{
+.curatin-update-info {
+  width: 100%;
   display: flex;
   flex-wrap: wrap;
   text-align: center;
-  
+  margin-left: 50px;
 }
+
+.curation-create-title {
+  width: 300px;
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid white;
+  background-color: transparent;
+  margin-right: 30px;
+  color: white;
+}
+
+.curation-create-title:focus {
+}
+
+.curation-create-button {
+  background-color: white;
+  color: #888;
+  font-weight: 800;
+  text-align: start;
+  float: left;
+  margin-left: 50px;
+}
+
+ 
 </style>
 
 

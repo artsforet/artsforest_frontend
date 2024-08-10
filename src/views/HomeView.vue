@@ -12,10 +12,11 @@ import axios from "axios";
 const curation = ref([]);
 const allTracks = ref([]);
 const isLoading = ref(false);
+const albumSeriesVlog = ref();
 const fetchCuration = async () => {
   isLoading.value = true;
   try {
-    const response = await axios.get("http://localhost:8000/music/curation/all", {
+    const response = await axios.get("http://localhost:80/music/curation/all", {
       params: {
         limit: 15,
       }
@@ -41,20 +42,40 @@ const fetchCuration = async () => {
     isLoading.value = false;
   }
 };
+const fetchAlbumSeries = async () => {
+  const token = localStorage.getItem('token')
+  const response = await axios.get('http://localhost:80/music/album/soundfactory/playlistLastSong', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  albumSeries.value = response.data;
+}
+const findVlog = async () => {
+  const token = localStorage.getItem('token')
+  const response = await axios.get('http://localhost:80/music/series/vlog', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  })
+  albumSeriesVlog.value = response.data;
+}
 
 
 onMounted(() => {
   fetchCuration();
+  fetchAlbumSeries();
+  findVlog();
 })
 
 </script>
 <template>
 <div>
-  <MainSwiper /> <br /><br /><br /><br />
+  <MainSwiper /> 
   <CuratedItemsSwiper :allTracks=allTracks :curation=curation />
   <PdSelect />
-  <ButtonSwiper />
-  <LastSongSwiper />
+  <ButtonSwiper :albumSeriesVlog=albumSeriesVlog :curation=curation />
+  <!-- <LastSongSwiper /> -->
   <YoutubeMain />
 </div>
 </template>

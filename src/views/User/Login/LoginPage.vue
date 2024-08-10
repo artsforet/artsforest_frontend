@@ -17,7 +17,7 @@ const userStore = useUserStore();
 const submit = async (event: Event) => {
   event.preventDefault();
   try {
-    const response = await axios.post('http://localhost:8000/auth/login ', {
+    const response = await axios.post('http://localhost:80/auth/login ', {
       username: username.value, 
       password: password.value
     })
@@ -29,7 +29,8 @@ const submit = async (event: Event) => {
     alert('로그인이 완료되었습니다.')
     router.push('/');
   } catch (error) {
-    alert(error + 'Invalid username or password.');
+    console.log(error);
+    alert('아이디와 패스워드를 확인해주세요.');
   }
 };
 
@@ -64,12 +65,13 @@ userStore.createPlaylist(username.value);
 
 <template>
   <div class="login-container">
+    <div class='login-container-wrap'>
     <div class="logo-container">
-      <h1 class="site-logo">
+      <h2 class="site-logo">
         <a href="/">
-        LOGO
+        ART FOREST
         </a>
-      </h1>
+      </h2>
     </div>
     <div class="login-form-container">
       <form 
@@ -128,13 +130,14 @@ userStore.createPlaylist(username.value);
       </div>
       <div class="social-login">
         <p>소셜 로그인/회원가입</p>
-        <div class="social-icons">
+        <!-- <div class="social-icons">
           <a href="#"><i class="bi bi-google"></i></a>
           <a href="#"><i class="bi bi-facebook"></i></a>
           <a href="#"><i class="bi bi-naver"></i></a>
           <a href="#"><i class="bi bi-chat"></i></a>
-        </div>
+        </div> -->
       </div>
+    </div>
     </div>
   </div>
 </template>
@@ -142,7 +145,7 @@ userStore.createPlaylist(username.value);
 <style scoped>
 .login-container {
   background-color: #202020;
-  width: 587px;
+  width: 100%;
   height: 100vh;
   justify-content: center;
   align-items: center;
@@ -150,6 +153,12 @@ userStore.createPlaylist(username.value);
   margin: 0 auto;
   padding-top: 100px;
   top: 0;
+  color: white;
+}
+
+.login-container-wrap {
+  width: 597px;
+  margin:0  auto;
 }
 
 .logo-container {
@@ -157,8 +166,10 @@ userStore.createPlaylist(username.value);
   margin-bottom: 20px;
 }
 
-.site-logo {
+.site-logo > a {
   color: #fff;
+  font-size: 1em;
+  font-weight: 600;
 }
 
 .logo-image {
@@ -175,7 +186,7 @@ a {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 4rem;
+  padding: 2rem;
 }
 
 .login-form {
@@ -205,10 +216,10 @@ a {
   width: 100%; /* Set width to 380px */
   height: 46px; /* Set height to match button */
   background: #484848;
-  border-radius: 5px;
+  border-radius: 10px;
   color: #bbb;
   border: none;
-  outline: none;
+  padding: 0 20px;
 }  
 
 .login-button {
@@ -219,7 +230,7 @@ a {
   font-weight: 800;
   font-size: 1.1em;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   left: 0;
 }
@@ -259,5 +270,9 @@ button:disabled {
 
 .remember-me-text {
   color: inherit;
+}
+
+a {
+  color: white;
 }
 </style>

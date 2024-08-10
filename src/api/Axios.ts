@@ -6,7 +6,7 @@ import axios from 'axios';
 const token = localStorage.getItem('token')
 // Axios 인스턴스 생성
 const axiosInstance = axios.create({
-  baseURL: 'http://localhost:8000', // 기본 URL 설정
+  baseURL: 'http://localhost:80', // 기본 URL 설정
   timeout: 10000, // 요청 타임아웃 설정 (밀리초)
   headers: {
     'content-type': 'application/json' // 기본 헤더 설정

@@ -1,13 +1,23 @@
 <template>
   <div class="album-detail-page">
-    <br />
+    <br /><br /><br /><br />
     <div class="album-detail-wrap">
       <div class="album-header">
-        <img v-if="songs[0]" :src="songs[0].song.cover" alt="Album Cover" class="album-cover" style="width: 200px; height: 200px;" />
+        <img
+          v-if="songs[0]" 
+          :src="songs[0].song.cover" 
+          alt="Album Cover" 
+          class="album-cover" 
+          style="width: 250px; height: 250px; border-radius: 15px;" 
+        />
+
         <div class="album-info">
           <h2>{{ albumName }}</h2> <br/>
-          <p v-if="songs[0]">발매일: <span > {{ songs[0].song.years }} </span></p>
-          <p v-if="songs[0]" style="font-size: 13px; padding: 0 5px 0 0">시리즈 <span style="border: 1px solid white; border-radius: 25px; padding: 5px 10px; font-size: 12px; color: #ccc"> {{ songs[0].song.series }} </span></p>
+          <p v-if="songs[0]" class="album-detail">발매일: <span>{{ songs[0].song.years }}</span></p>
+          <p v-if="songs[0]" class="album-detail">
+            시리즈 
+            <span class="album-series">{{ songs[0].song.series }}</span>
+          </p>32qwDAQWAED 
         </div>
       </div>
       <br />
@@ -15,35 +25,32 @@
         <li v-for="song in songs" :key="song.id" class="song-item">
           <img :src="song.song.cover" alt="Song Cover" class="song-cover" />
 
-
-
           <div class="song-info">
             <div class="song-title">{{ song.song.title }}</div>
             <div class="song-details">{{ song.song.album }}</div>
           </div>
-
-  
 
           <div class="song-meta" style="font-size:14px; color: #f3be38 ">
             <span class="song-duration">{{ formatTime(song.duration) }}</span>
             <span class="song-bpm">{{ song.song.tempo}} BPM</span>
           </div>
 
-
-        <div class="song-tags" style="width:404px;">
+          <div class="song-tags" style="width:404px;">
             <span v-for="tags in song.tags" :key="tags" style="font-size:14px; color: #888"> #{{tags}} </span>
           </div>
 
           <button @click="playPauseSong(song.song)" class="button-custom">
+            <i class="bi bi-play-fill" v-if="!isPlaying(song)"></i>
             <i class="bi" :class="[isPlaying(song) ? 'bi-pause-fill' : 'bi-play-fill']"></i>
           </button>
+
+          
           <button @click="downloadMp(song.song)" class="button-custom">
             <i class="bi bi-download"></i>
           </button>
-           <button @click="toggleLikes(song)" class="button-custom">
+          <button @click="toggleLikes(song)" class="button-custom">
             <img v-if="song.isLiked === true" :src="fillheart" style="width: 30px" />
             <img v-if="song.isLiked === false" :src="nofillheart" style="width: 30px" />
-            <!-- <i :class="song.isLiked === true? 'bi bi-heart-fill' : 'bi bi-heart'" style="color: red"></i> -->
           </button>
         </li>
       </ul>
@@ -72,7 +79,7 @@ onMounted(() => {
 const fetchAlbumSongs = async () => {
   const token = localStorage.getItem('token');
   try {
-    const response = await axios.get(`http://localhost:8000/music/album/${albumName.value}`, {
+    const response = await axios.get(`http://localhost:80/music/album/${albumName.value}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -87,8 +94,6 @@ const fetchAlbumSongs = async () => {
   }
 };
 
-
-
 const playPauseSong = (song) => {
   if (eventBus.selectedSong && eventBus.selectedSong.id === song.id) {
     eventBus.playPause = !eventBus.playPause;
@@ -100,18 +105,16 @@ const playPauseSong = (song) => {
 
 const toggleLikes = async (song) => {
   const token = localStorage.getItem('token');
-  console.log(song.song)
   try {
     if (song.isLiked) {
-      await axios.delete(`http://localhost:8000/music/unlike/${song.song.id}`, {
+      await axios.delete(`http://localhost:80/music/unlike/${song.song.id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
-      console.log(song);
       song.isLiked = false;
     } else {
-      await axios.post(`http://localhost:8000/music/like/${song.song.id}`, {}, {
+      await axios.post(`http://localhost:80/music/like/${song.song.id}`, {}, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -120,7 +123,6 @@ const toggleLikes = async (song) => {
     }
   } catch (error) {
     console.error("Error toggling like status:", error);
-    // 오류 처리 추가
   }
 };
 
@@ -152,7 +154,7 @@ const downloadMp = async (song) => {
 
     const token = localStorage.getItem('token');
     window.URL.revokeObjectURL(url);
-    axios.post(`http://localhost:8000/music/download/${song.id}`, {}, {
+    axios.post(`http://localhost:80/music/download/${song.id}`, {}, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -181,15 +183,15 @@ const formatTime = (seconds) => {
   width: 1196px;
   margin: 0 auto;
 }
+
 .album-header {
   display: flex;
-  align-items: center;
   margin-bottom: 20px;
 }
 
 .album-cover {
-  width: 150px;
-  height: 100px;
+  min-width: 200px;
+  height: 200px;
   margin-right: 20px;
 }
 
@@ -197,10 +199,27 @@ const formatTime = (seconds) => {
   display: flex;
   flex-direction: column;
 }
-.album-info > span > p > span {}
 
 .album-info h2 {
   margin: 0;
+}
+
+.album-detail {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.album-detail > span {
+  margin-left: 10px;
+}
+
+.album-series {
+  border: 1px solid white;
+  border-radius: 25px;
+  padding: 5px 10px;
+  font-size: 12px;
+  color: #ccc;
 }
 
 .song-list {
@@ -247,6 +266,7 @@ const formatTime = (seconds) => {
 .song-duration {
   width: 50px;
 }
+
 .song-bpm {
   width: 80px;
   margin-right: 20px;

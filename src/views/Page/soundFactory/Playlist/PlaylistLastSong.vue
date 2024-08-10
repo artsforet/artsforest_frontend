@@ -11,7 +11,7 @@ const itemsPerPage = 25; // 한 페이지당 최대 25개 (5줄 x 5개)
 
 const fetchAlbum = async () => {
   try {
-    const response = await axios.get("http://localhost:8000/music/soundfactory/");
+    const response = await axios.get("http://localhost:80/music/soundfactory/");
     albumList.value = response.data;
 
     // 모든 노래 목록을 수집
@@ -28,7 +28,7 @@ const fetchAlbum = async () => {
 const addToPlaylistAndPlayFirst = async (tracks) => {
   const token = localStorage.getItem('token');
   const requests = tracks.map(song => {
-    return axios.post(`http://localhost:8000/playlist/add/${song.id}`, {}, {
+    return axios.post(`http://localhost:80/playlist/add/${song.id}`, {}, {
       headers: {
         Authorization: `Bearer ${token}`
       }

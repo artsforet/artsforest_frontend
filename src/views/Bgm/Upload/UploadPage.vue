@@ -42,6 +42,7 @@
               :key="index"
               @click="selectSong(index)"
               :class="{ selected: selectedSongIndex === index }"
+              style="width:956px"
             >
               {{ filename }}
             </li>
@@ -124,9 +125,8 @@
       </div>
     </div>
   </div>
-  
 
-        <button type="submit" class="upload-button" :disabled="!canUpload">Upload</button>
+  <button type="submit" class="upload-button" :disabled="!canUpload" style="margin-top:50px;">Upload</button>
       </form>
       <div v-if="uploadSuccess" class="success-message">
         Upload successful!
@@ -264,39 +264,41 @@ export default {
         },
 
   async uploadMusic() {
-  const coversFile = this.$refs.covers.files[0];
-  const formData = new FormData();
+    const coversFile = this.$refs.covers.files[0];
+    const formData = new FormData();
 
-  this.selectedFiles.forEach((file, index) => {
-    const musicEntry = { ...this.musicData[index] };
-    musicEntry.category = musicEntry.selectedCategories;
-    musicEntry.series = musicEntry.selectedAlbumseries;
+    this.selectedFiles.forEach((file, index) => {
+      const musicEntry = { ...this.musicData[index] };
+      musicEntry.category = musicEntry.selectedCategories;
+      musicEntry.series = musicEntry.selectedAlbumseries;
 
-    // Ensure tags is an array
-    if (typeof musicEntry.tags === 'string') {
-      musicEntry.tags = musicEntry.tags.split(',').map(tag => tag.trim());
+      // Ensure tags is an array
+      if (typeof musicEntry.tags === 'string') {
+        musicEntry.tags = musicEntry.tags.split(',').map(tag => tag.trim());
+      }
+
+      // Append the entire musicEntry object as JSON
+      formData.append('musics', file);
+      formData.append('datas', new Blob([JSON.stringify(musicEntry)], { type: 'application/json' }));
+    });
+
+    if (coversFile) {
+      formData.append('cover', coversFile);
     }
-
-    // Append the entire musicEntry object as JSON
-    formData.append('musics', file);
-    formData.append('datas', new Blob([JSON.stringify(musicEntry)], { type: 'application/json' }));
-  });
-
-  if (coversFile) {
-    formData.append('cover', coversFile);
-  }
 
   try {
     const token = localStorage.getItem('token');
     if (!token) {
       throw new Error('No token found');
     }
-    const response = await axios.post('http://localhost:8000/music/upload', formData, {
+    const response = await axios.post('http://localhost:80/music/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       },
     });
+    alert("업로드가 완료 되었습니다.");
+    
     if (response.status === 200) {
       this.uploadSuccess = true;
     } else {

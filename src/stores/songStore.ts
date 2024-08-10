@@ -23,7 +23,7 @@ export const useSongStore = defineStore('songStore', {
     // BGM FACTORY SONG 
     async fetchSongs(token?: string) {
       try {
-        const response = await axios.get('http://localhost:8000/music/soundfactory/song', {
+        const response = await axios.get('http://localhost:80/music/soundfactory/song', {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -36,7 +36,7 @@ export const useSongStore = defineStore('songStore', {
     // BGM FACTORY ALBUM
     async fetchAlubm() {
       try {
-        const response = await axios.get('http://localhost:8000/music/soundfactory/album');
+        const response = await axios.get('http://localhost:80/music/soundfactory/album');
         this.songs = response.data;
       } catch (error) {
         console.error('Failed to fetch songs:', error);
@@ -47,7 +47,7 @@ export const useSongStore = defineStore('songStore', {
     // SFX 효과음 
     async fetchSfxSong() {
       try {
-        const response = await axios.get('http://localhost:8000/music/soundfactory/sfxEffect');
+        const response = await axios.get('http://localhost:80/music/soundfactory/sfxEffect');
         this.songs = response.data;
       } catch (error) {
         console.error('Failed to fetch songs:', error);
@@ -58,7 +58,7 @@ export const useSongStore = defineStore('songStore', {
     // SFX 폴리사운드
     async fetchSfxPolysound() {
       try {
-        const response = await axios.get('http://localhost:8000/music/soundfactory/sfxPolysound');
+        const response = await axios.get('http://localhost:80/music/soundfactory/sfxPolysound');
         this.songs = response.data;
       } catch (error) {
         console.error('Failed to fetch songs:', error);
@@ -68,7 +68,7 @@ export const useSongStore = defineStore('songStore', {
     // 예술숲 곡 
     async fetchArtsForestSong() {
       try {
-        const response = await axios.get('http://localhost:8000/music/soundfactory/artsForestSong');
+        const response = await axios.get('http://localhost:80/music/soundfactory/artsForestSong');
         this.songs = response.data;
       } catch (error) {
         console.error('Failed to fetch songs:', error);
@@ -79,7 +79,7 @@ export const useSongStore = defineStore('songStore', {
     // 에술숲 앨범 
     async fetchArtsForestAlbum() {
       try {
-        const response = await axios.get('http://localhost:8000/music/soundfactory/artsForestAlbum');
+        const response = await axios.get('http://localhost:80/music/soundfactory/artsForestAlbum');
         this.songs = response.data;
       } catch (error) {
         console.error('Failed to fetch songs:', error);
@@ -90,7 +90,7 @@ export const useSongStore = defineStore('songStore', {
     // 무료배포 사운드 팩토리
     async fetchFreeSoundFactory() {
       try {
-        const response = await axios.get('http://localhost:8000/music/soundfactory/freeSoundFacotry');
+        const response = await axios.get('http://localhost:80/music/soundfactory/freeSoundFacotry');
         this.songs = response.data;
       } catch (error) {
         console.error('Failed to fetch songs:', error);
@@ -100,7 +100,7 @@ export const useSongStore = defineStore('songStore', {
     // 무료배포 공유마당 
     async fetchFreeYard() {
       try {
-        const response = await axios.get('http://localhost:8000/music/soundfactory/FreeYard');
+        const response = await axios.get('http://localhost:80/music/soundfactory/FreeYard');
         this.songs = response.data;
       } catch (error) {
         console.error('Failed to fetch songs:', error);
@@ -110,9 +110,9 @@ export const useSongStore = defineStore('songStore', {
 
 
     // 플레이리스트 큐레이션 
-    async fetchPlaylistQuration() {
+    async fetchPlaylistCuration() {
       try {
-        const response = await axios.get('http://localhost:8000/music/soundfactory/playlistQuration');
+        const response = await axios.get('http://localhost:80/music/soundfactory/playlistCuration');
         this.songs = response.data;
       } catch (error) {
         console.error('Failed to fetch songs:', error);
@@ -125,7 +125,7 @@ export const useSongStore = defineStore('songStore', {
     // 플레이리스트 방금그곡
     async fetchPlaylistLastSong() {
       try {
-        const response = await axios.get('http://localhost:8000/music/soundfactory/playlistLastSong');
+        const response = await axios.get('http://localhost:80/music/soundfactory/playlistLastSong');
         this.songs = response.data;
       } catch (error) {
         console.error('Failed to fetch songs:', error);
@@ -135,7 +135,7 @@ export const useSongStore = defineStore('songStore', {
 
     async userPlaylist(getToken: string) {
       try {
-        const response = await axios.get('http://localhost:8000/playlist/userplayer', {
+        const response = await axios.get('http://localhost:80/playlist/userplayer', {
           headers: {
             Authorization: `Bearer ${getToken}`,
           },

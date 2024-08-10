@@ -1,31 +1,93 @@
 <template>
   <div class="song-list-container">
     <div class="song-list">
-      <h3 style="color: white; height: 20px; font-weight: 600">PD의 선택</h3>
-      <div v-for="(song, index) in songs" :key="index" class="song-item">
-        <img :src="song.image" class="song-image" />
-        <div class="song-info">
-          <div class="song-title">{{ song.title }}</div>
-          <div class="song-album">{{ song.album }}</div>
-          <div class="song-meta">
-            <span class="song-length">길이 {{ song.length }}</span>
-            <span class="song-bpm">템포 {{ song.bpm }} BPM</span>
-          </div>
-        </div>
-        <div class="button-custom">
-          <i class="bi bi-play-fill"></i>
-          <!-- <i class="bi bi-three-dots menu-button"></i> -->
-        </div>
+       <div class="swiper-curated-flex" style="width: 100%; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+          <router-link to='/playlist/curation' style="color: white; text-decoration: none;">
+          <h3 style="font-weight:600">
+              PD의 선택
+          </h3>
+          </router-link>
+        <p style="color: white; align-self: flex-end; margin: 0; font-weight: 600">
+          <router-link to='/playlist/curation' style="color: white; text-decoration: none">더보기</router-link>
+        </p>
       </div>
+
+
+
+          <div v-for="(song, index) in pd" :key="index" class="song-item">
+            <router-link to='/'>
+            <img :src="song.cover" class="song-image" />
+            </router-link>
+            <div class="song-info">
+              <router-link to='/'>
+              <div class="song-title">
+                {{ song.title }}
+              </div>
+              <div class="song-album">{{ song.album }}</div>
+              </router-link>
+              <div class="song-meta">
+                <span class="song-length">길이 {{ song.duration }}</span>
+                <span class="song-bpm">템포 {{ song.tempo }} BPM</span>
+              </div>
+          </div>
+      
+          <button @click="playPauseSong(song)" class="button-custom">
+            <img src="@/assets/icons/music/play.png" style="width: 50px" v-if="!isPlaying(song)" />
+            <img src="@/assets/icons/music/pause.png" style="width: 50px" v-if="isPlaying(song)" />
+          </button>
+      </div>
+        <div v-if="pd.length === 0" style="color: white; margin:0"> 등록된 곡이 없습니다.</div>
     </div>
   </div>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      songs: [
+<script setup>
+import {onMounted, ref} from "vue";
+import axios from "axios";
+import eventBus from '@/eventBus';
+
+const pd = ref([]); 
+const fetchPd = async () => {
+  const token = localStorage.getItem('token');
+  const response = await axios.get('http://localhost/music/pdSelect/all', {
+      params: {
+        limit: 8,
+      },
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+  });
+  pd.value = response.data;
+}
+
+onMounted(()=> {
+  fetchPd();
+})
+
+const isPlaying = (song) => {
+  return eventBus.selectedSong && eventBus.selectedSong.id === song.id && eventBus.playPause;
+};
+
+
+const playPauseSong = async (song) => {
+  const token = localStorage.getItem('token');
+  try {
+    await axios.post(`http://localhost:80/playlist/add/${song.id}`, {}, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+  } catch (error) {
+    console.error(error);
+  }
+  if (eventBus.selectedSong && eventBus.selectedSong.id === song.id) {
+    eventBus.playPause = !eventBus.playPause;
+  } else {
+    eventBus.selectedSong = song;
+    eventBus.playPause = true;
+  }
+};
+const songs = ref([
         {
           image: "https://swiperjs.com/demos/images/nature-1.jpg",
           title: "도로옆 해변이 보인다",
@@ -33,73 +95,7 @@ export default {
           length: "01:59",
           bpm: 96,
         },
-        {
-          image: "https://swiperjs.com/demos/images/nature-1.jpg",
-          title: "폭풍 치는 더위",
-          album: "여름이다! 해변으로 떠나자! [여행 Vlog Type Vol. 3]",
-          length: "01:54",
-          bpm: 120,
-        },
-        {
-          image: "https://swiperjs.com/demos/images/nature-1.jpg",
-          title: "물속으로 뛰어",
-          album: "여름이다! 해변으로 떠나자! [여행 Vlog Type Vol. 3]",
-          length: "02:00",
-          bpm: 138,
-        },
-        {
-          image: "https://swiperjs.com/demos/images/nature-1.jpg",
-          title: "Moon dance",
-          album: "자기전 듣는 수면 BGM 끝판왕 [Lofi & Chill Beat Vol. 9]",
-          length: "02:09",
-          bpm: 70,
-        },
-        {
-          image: "https://swiperjs.com/demos/images/nature-1.jpg",
-          title: "Sweet home",
-          album: "자기전 듣는 수면 BGM 끝판왕 [Lofi & Chill Beat Vol. 9]",
-          length: "02:10",
-          bpm: 76,
-        },
-        {
-          image: "https://swiperjs.com/demos/images/nature-1.jpg",
-          title: "Dust wind",
-          album: "자기전 듣는 수면 BGM 끝판왕 [Lofi & Chill Beat Vol. 9]",
-          length: "02:17",
-          bpm: 87,
-        },
-        {
-          image: "https://swiperjs.com/demos/images/nature-1.jpg",
-          title: "Groove with Beer",
-          album: "낭만의 맥주 축제 현장 [여행 Vlog Type Vol. 2]",
-          length: "02:00",
-          bpm: 130,
-        },
-        {
-          image: "https://swiperjs.com/demos/images/nature-1.jpg",
-          title: "분위기에 취한다",
-          album: "낭만의 맥주 축제 현장 [여행 Vlog Type Vol. 2]",
-          length: "02:13",
-          bpm: 163,
-        },
-        {
-          image: "https://swiperjs.com/demos/images/nature-1.jpg",
-          title: "여름의 시작",
-          album: "일년 중 가장 긴 하루, 하지 [6월의 하지]",
-          length: "02:04",
-          bpm: 130,
-        },
-        {
-          image: "https://swiperjs.com/demos/images/nature-1.jpg",
-          title: "일출 시간",
-          album: "일년 중 가장 긴 하루, 하지 [6월의 하지]",
-          length: "01:54",
-          bpm: 60,
-        },
-      ],
-    };
-  },
-};
+      ])
 </script>
 
 <style scoped>
@@ -119,7 +115,7 @@ h3 {
 }
 
 .song-list {
-  width: 1200px;
+  width: 1196px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -154,7 +150,6 @@ h3 {
 }
 
 .song-album {
-  color: gray;
   margin-top: 5px;
 }
 
@@ -171,8 +166,20 @@ h3 {
 }
 
 .button-custom {
-  font-size: 30px;
   color: white;
   cursor: pointer;
+  margin: 0;
+  padding: 0;
+}
+
+
+.bi {
+  font-size: 25px;
+  margin-right: 20px;
+}
+
+a {
+  text-decoration: none;
+  color: white;
 }
 </style>

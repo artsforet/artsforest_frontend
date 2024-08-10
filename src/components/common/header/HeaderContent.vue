@@ -2,12 +2,13 @@
 <div class="header-content-main">
   <ul class="headear-content-main-list">
     <li class="header-content_user" v-if="loggedInUser">
-      <span @click="toggleDropdown">{{loggedInUser}}</span>
+      <span @click="toggleDropdown" style="cursor: pointer">{{loggedInUser}}</span>
       <div v-if="showDropdown" class="dropdown_list">
         <div><router-link to="/">마이페이지</router-link></div>
         <div><router-link to="/upload">업로드</router-link></div>
+        <div><router-link to="/master/curation">관리자 전용 어드민</router-link></div>
         <div><router-link to="/">1:1 문의 내역</router-link></div>
-        <div @click="logout">로그아웃</div>
+        <div @click="logout" style="cursor: pointer">로그아웃</div>
       </div>
   </li>
    <li v-else>
@@ -74,17 +75,20 @@ onMounted(() => {
 @import './HeaderContent.css';
 
 .header-content-main {
+  width: 100%;
   height: 30px;
   line-height: 30px;
   background-color: #202020;
   color: white;
   padding: 0;
   margin: 0;
+  top: 0;
   display: flex;
   text-align: center;
   justify-content: center;
-  font-size: 1rem; /* Set font size to 1rem to override the 8px set in main.css, 
-                      and make it relative to the root element's font size */
+  z-index: 9999;
+  font-size: 1rem;
+  position: fixed;
 }
 
 .headear-content-main-list {
@@ -92,6 +96,8 @@ onMounted(() => {
   justify-content: space-between;
   list-style: none;
   height: inherit;
+  background-color: #202020;
+  z-index: 9999;
 }
 
 .headear-content-main-list li {
@@ -127,9 +133,13 @@ onMounted(() => {
   margin: 10px 0;
 }
 
-.dropdown_list li a {
+.dropdown_list > div > a {
   color: white;
   text-decoration: none;
+}
+
+.dropdown_list > div > a:hover {
+  color: rgba(255,255,255, 0.8)
 }
 
 </style>

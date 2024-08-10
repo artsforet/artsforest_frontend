@@ -1,5 +1,6 @@
-import './assets/main.css'
-import '../main.css'
+// import './assets/main.css'
+import './assets/css/songPage.css'
+// import '../main.css'
 
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -8,6 +9,7 @@ import router from './router'
 import {createPinia} from "pinia";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import './assets/css/font.css';  // 폰트 CSS 파일 import
 
 import 'swiper/css';
 import 'swiper/css/pagination';

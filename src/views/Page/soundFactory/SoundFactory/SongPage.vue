@@ -1,76 +1,66 @@
 <template>
   <div class="song-common-layout">
-    <br /><br /><br />
+    <br /><br /><br /> <br /><br />
     <div class="song-common-page">
       <h2 style="font-weight:600">곡 > BGM </h2>
-      <p> 템포 전체 | 길이 전체 </p>
+      <p style="color: #FFC200"> 템포 전체 | 길이 전체 </p>
       <br />
-      <ul style="padding: 0">
-        <li v-for="song in paginatedSongs" :key="song.id" class="song-item">
-          <div class="soundfactory-song-info">
-            <div class="soundfactory-song-info-text">
-              <router-link :to="{ name: 'AlbumDetail', params: { album: song.album } }">
+      <div class="song-list">
+        <div v-for="song in paginatedSongs" :key="song.id" class="song-item">
+          <div class="song-cover-container">
+            <router-link :to="{ name: 'AlbumDetail', params: { album: song.album } }">
               <img 
                 :src="song.cover" 
                 alt="Beautiful Landscape" 
                 class="song-cover"
                 @click="fetchAlbumSongs(song.album)"
               />
-              </router-link>
-              <div class="text-container">
-                <router-link :to="{ name: 'SongDetail', params: { id: song.id } }">
-                  <span>{{ song.title }}</span> <br />
-                  <span style="font-size:13px; color: #888">{{ song.description }}</span>
-                </router-link>
-              </div>
+            </router-link>
+          </div>
+          <div class="song-info">
+            <router-link :to="{ name: 'SongDetail', params: { id: song.id } }">
+              <div class="item-title">{{ song.title }}</div>
+              <div style="font-size:13px; color: #888">{{ song.description }}</div>
+            </router-link>
+            <div class="song-tags">
+              <span v-for="tag in song.tags" :key="tag" class="song-tag">
+                #{{tag}} 
+              </span>
             </div>
           </div>
-          <div class='waveform-custom'> 
-          <div class="waveform-container" :id="'waveform-' + song.id"><br/>
-
+          <div class="waveform-custom">
+            <div class="waveform-container" :id="'waveform-' + song.id"></div>
           </div>
-          <span 
-            style="float: left;"
-            > 
-            <span
-            v-for="tag in song.tags" 
-            :key="tag"
-            style="margin: 0 5px; font-size:14px;"
-            >
-            #{{tag}} 
-            </span>
-            </span> 
-          </div>
-          &nbsp; &nbsp; &nbsp;
-
           <div class="time-info" :class="{ playing: eventBus.selectedSong && eventBus.selectedSong.id === song.id }">
             <span class="current-time" v-if="eventBus.selectedSong && eventBus.selectedSong.id === song.id">{{ formatTime(eventBus.currentTime) }} / </span>
-            &nbsp;
             <span class="total-time">{{ formatTime(song.duration) }}</span>
           </div>
-
-          <button @click="playPauseSong(song)" class="button-custom">
-            <i class="bi bi-play-fill" v-if="!isPlaying(song)"></i>
-            <i class="bi bi-pause-fill" v-if="isPlaying(song)"></i>
-          </button>
-
-          <button @click="downloadMp(song)" class="button-custom">
-            <i class="bi bi-download"></i>
-          </button>
-
-          <button @click="toggleLikes(song)" class="button-custom">
-            <img v-if="song.isLiked === true" :src="fillheart" style="width: 30px" />
-            <img v-if="song.isLiked === false" :src="nofillheart" style="width: 30px" />
-            <!-- <i :class="song.isLiked === true? 'bi bi-heart-fill' : 'bi bi-heart'" style="color: red"></i> -->
-          </button>
-        </li>
-      </ul>
+          <div class="song-actions">
+            <button @click="playPauseSong(song)" class="button-custom">
+              <i class="bi bi-play-fill" v-if="!isPlaying(song)"></i>
+              <i class="bi bi-pause-fill" v-if="isPlaying(song)"></i>
+            </button>
+            <button @click="downloadMp(song)" class="button-custom">
+              <i class="bi bi-download"></i>
+            </button>
+            <button @click="toggleLikes(song)" class="button-custom">
+              <img v-if="song.isLiked === true" :src="fillheart" class="heart-icon" />
+              <img v-else :src="nofillheart" class="heart-icon" />
+            </button>
+          </div>
+        </div>
+      </div>
+      <br /><br />
       <div class="pagination">
-        <button @click="prevPage" :disabled="currentPage === 1"> < </button>
+        <button @click="prevPage" :disabled="currentPage === 1"> 
+          <i class="bi bi-chevron-left" style="font-size: 14px;"></i>
+         </button>
         <button v-for="page in pages" :key="page" @click="changePage(page)" :class="{ active: page === currentPage }">
           {{ page }}
         </button>
-        <button @click="nextPage" :disabled="currentPage === totalPages"> > </button>
+        <button @click="nextPage" :disabled="currentPage === totalPages"> 
+          <i class="bi bi-chevron-right" style="font-size: 14px"></i>
+        </button>
       </div>
     </div>
   </div>
@@ -97,7 +87,7 @@ const waveSurferInstances = new Map();
 const fetchAlbumSongs = async (albumId) => {
   const token = localStorage.getItem('token');
   try {
-    const response = await axios.get(`http://localhost:8000/music/album/${albumId}`, {
+    const response = await axios.get(`http://localhost:80/music/album/${albumId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -111,7 +101,7 @@ const fetchAlbumSongs = async (albumId) => {
 const playPauseSong = async (song) => {
   const token = localStorage.getItem('token');
   try {
-    await axios.post(`http://localhost:8000/playlist/add/${song.id}`, {}, {
+    await axios.post(`http://localhost:80/playlist/add/${song.id}`, {}, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -136,7 +126,7 @@ const toggleLikes = async (song) => {
   const token = localStorage.getItem('token');
   try {
     if (song.isLiked) {
-      await axios.delete(`http://localhost:8000/music/unlike/${song.id}`, {
+      await axios.delete(`http://localhost:80/music/unlike/${song.id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -144,7 +134,7 @@ const toggleLikes = async (song) => {
       console.log(song);
       song.isLiked = false;
     } else {
-      await axios.post(`http://localhost:8000/music/like/${song.id}`, {}, {
+      await axios.post(`http://localhost:80/music/like/${song.id}`, {}, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -206,7 +196,7 @@ const initializeWaveSurfer = () => {
 const fetchArtistDownloads = async (song) => {
   const token = localStorage.getItem('token');
   try {
-    const response = await axios.get(`http://localhost:8000/music/downloads/artist/${song}`, {
+    const response = await axios.get(`http://localhost:80/music/downloads/artist/${song}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -290,7 +280,7 @@ const downloadMp = async (song) => {
       link.click();
       document.body.removeChild(link);
 
-      axios.post(`http://localhost:8000/music/download/${song.id}`, {}, {
+      axios.post(`http://localhost:80/music/download/${song.id}`, {}, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -324,14 +314,131 @@ watch(currentPage, () => {
 </script>
 
 <style scoped>
+div {
+  margin: 0;
+  padding: 0;
+}
+.song-common-layout{
+  width: 100%;
+  height: 100vh;
+  background-color: rgb(26, 26, 26);
+  color: white;
+}
+
+.song-common-page {
+  width: 1200px;
+  margin: 0 auto;
+
+}
 .playing {
     color: #f3be38;
 }
 
 .button-custom {
   margin-top: 10px;
+  background: transparent;
+  color: white;
+  border: none;
 }
 .bi {
   font-size: 30px;
 }
+
+.song-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.song-item {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #333;
+  padding: 10px 0;
+  display: flex;
+  color: white;
+}
+
+.song-cover-container {
+  margin-right: 20px;
+}
+
+.song-cover {
+  width: 60px;
+  height: 60px;
+  cursor: pointer;
+}
+
+.song-info {
+  flex: 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-right: 20px;
+}
+
+.item-title {
+  font-weight: bold;
+}
+
+.song-tags {
+  display: flex;
+  margin-top: 5px;
+}
+
+.song-tag {
+  margin-right: 5px;
+  font-size: 13px;
+  color: #888;
+}
+
+.waveform-custom {
+  flex: 4;
+  margin-right: 20px;
+}
+
+.time-info {
+  flex: 1;
+  font-size: 14px;
+  display: flex;
+  justify-content: center;
+  margin-right: 20px;
+}
+
+.song-actions {
+  display: flex;
+  justify-content: space-around;
+  gap: 10px;
+}
+
+.heart-icon {
+  width: 20px;
+}
+
+a {
+  color: white;
+  text-decoration: none;
+}
+
+.pagination {
+  justify-content: center;
+}
+.pagination > button {
+  width: 30px;
+  height: 30px;
+  border-radius: 25px;
+  background-color: #484848;
+  color: #bbbbbb;
+  font-weight: 300;
+  margin: 0 5px;
+  border: none;
+}
+
+.pagination button.active {
+  color: #232020;
+  background-color: #f3be38;
+  font-weight: bold;
+  border: none;
+}
+
 </style>

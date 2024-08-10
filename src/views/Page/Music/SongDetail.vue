@@ -7,26 +7,26 @@
         <br />
 
         <p v-if="song.description" class="song-detail-info-description">{{ song.description }}</p>
-
+        <br />
         <div class="song-meta">
           <div class="key-values">
             <div class="keys">
               <!-- <p v-if="song.years" class="song-meta-number">발매일:</p> -->
-              <p v-if="song.tempo" class="song-meta-number">템포:</p>
-              <p v-if="song.duration" class="song-meta-number">시간:</p>
+              <p v-if="song.tempo" >템포:</p>
+              <p v-if="song.duration">시간:</p>
               <p v-if="song.artist" class="song-meta-data">아티스트</p>
               <p v-if="song.mood" class="song-meta-data">분위기</p>
               <p v-if="song.album" class="song-meta-data">앨범시리즈</p>
-              <p v-if="downloadCount" class="song-meta-data">아티스트 음악 다운로드 횟수</p>
+              <p v-if="downloadCount" class="song-meta-data"> 아티스트곡 다운로드 횟수</p>
             </div>
             <div class="values">
               <!-- <p v-if="song.years" class="song-meta-number">{{ song.years }}</p> -->
-              <p v-if="song.tempo" class="song-meta-number">{{ song.tempo }}</p>
+              <p v-if="song.tempo" class="song-meta-number">{{ song.tempo }} BPM </p>
               <p v-if="song.duration" class="song-meta-number">{{ formatDuration(song.duration) }}</p>
               <span v-if="song.artist" class="song-meta-data"> #{{ song.artist }}</span> <br /><br />
               <span v-if="song.mood" class="song-meta-data">#{{ song.mood }}</span> <br /><br />
               <span v-if="song.album" class="song-meta-data">#{{ song.album }}</span><br /><br />
-              <p v-if="song.downloadCount" class="song-meta-data">#{{ downloadCount }}</p>
+              <p v-if="song.downloadCount" class="song-meta-data">{{ downloadCount }}</p>
               <!-- <p>
                 <span 
                   style="
@@ -52,9 +52,9 @@
             </div>
           </div>
         </div>
-        <div class="song-tags">
+        <!-- <div class="song-tags">
           <span v-for="tag in song.tags" :key="tag">{{ tag }}</span>
-        </div>
+        </div> -->
       </div>
     </div>
 
@@ -87,7 +87,7 @@ const downloadCount = ref();
 
 const fetchSong = async () => {
   try {
-    const response = await axios.get(`http://localhost:8000/music/${route.params.id}`);
+    const response = await axios.get(`http://localhost:80/music/${route.params.id}`);
     song.value = response.data;
     totalTime.value = song.value.duration;
     fetchArtistDownloadsCount(song.value);
@@ -97,7 +97,7 @@ const fetchSong = async () => {
 };
 
 const fetchArtistDownloadsCount = async (song) => {
-    const response = await axios.get(`http://localhost:8000/music/artist/${song.artist}`);
+    const response = await axios.get(`http://localhost:80/music/artist/${song.artist}`);
     downloadCount.value = response.data;
 };
 
@@ -160,7 +160,7 @@ onMounted(() => {
   height: 100vh;
   background-color: #1f1f1f;
   padding: 20px;
-  color: #bbb;  
+  color: white;  
   font-size: 14px;
 }
 
@@ -269,14 +269,11 @@ onMounted(() => {
   padding: 2px 5px 0 0;
  }
 .values > .song-meta-data {
-  padding: 5px 10px; /* Adjust padding as needed */
-  border: 1px solid white;
-  border-radius: 25px;
   color: #bbb;
-  line-height: 1.5em; /* Line height relative to the text size */
-  font-size: 13px;
+  line-height: 1em; /* Line height relative to the text size */
+  font-size: 16px;
   font-weight: 500;
-  font-size: 12px;
+  font-size: 14px;
   white-space: nowrap; /* Prevents text from wrapping */
   overflow: hidden; /* Ensures the element doesn't grow beyond its content */
   text-overflow: ellipsis; /* Adds ellipsis if text overflows */

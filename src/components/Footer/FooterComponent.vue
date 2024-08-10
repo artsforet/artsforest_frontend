@@ -28,7 +28,7 @@
     background-color: #202020;
     text-align: start;
     padding-bottom: 200px;
-    z-index: 99;
+    z-index: 99999999;
     color: white;
 }
 
@@ -39,7 +39,6 @@
     padding-top: 70px;
 }
 
-.footer-nav {}
 
 .footer-nav > nav >  a {
     margin-right: 20px;

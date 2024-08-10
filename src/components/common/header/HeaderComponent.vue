@@ -3,7 +3,7 @@
     <div class="header-bottom_content">
       <div class="header-inner_container header-inner_container--bottom">
         <div class="header-interact">
-          <router-link to="/" class="header-logo"> 예술숲 </router-link>
+          <router-link to="/" class="header-logo"> ART FOREST </router-link>
           <form class="header_search-area">
             <!--            <input type="hidden" name="searchtype" value="track" />-->
             <div class="header_search-wrap">
@@ -74,20 +74,21 @@
             </div>
             <div class="shortcut-item_list">
               <div class="shortcut-item">
-                <router-link to="/free/soundfactory" class="shortcut-link"> 사운드팩토리 </router-link>
+                <router-link to="/freefactory" class="shortcut-link"> 사운드팩토리 </router-link>
               </div>
               <div class="shortcut-item">
-                <router-link to="/free/yarn" class="shortcut-link"> 공유마당 </router-link>
+                <router-link to="/freeyard" class="shortcut-link"> 공유마당 </router-link>
             </div>
               </div>
           </div>
+
           <div class="header-shortcut">
             <div class="shortcut-header">
               <div class="shortcut-link">플레이리스트</div>
             </div>
             <div class="shortcut-item_list">
               <div class="shortcut-item">
-                <router-link to="/playlist/quration" class="shortcut-link"> 큐레이션 </router-link>
+                <router-link to="/playlist/curation" class="shortcut-link"> 큐레이션 </router-link>
               </div>
               <div class="shortcut-item">
                 <router-link to="/playlist/lastsong" class="shortcut-link"> 방금그곡 </router-link>
@@ -111,7 +112,8 @@
 <style scoped>
 .header-ground_container {
   background-color: #202020;
-  height: 130px;
+  height: 200px;
+  align-items: center;
   color: #ffffff;
   z-index: 20;
   margin: 0;
@@ -121,6 +123,7 @@
   max-width: calc(100% - 40px);
   width: 1197px;
   margin: 0 auto;
+  align-items: center;
 }
 
 .header-inner_container--top {
@@ -163,7 +166,6 @@
   position: absolute;
   width: 130px;
   padding: 8px 0;
-  background-color: #333333;
   border-radius: 10px;
   z-index: 11;
   right: 0;
@@ -224,19 +226,23 @@
   cursor: pointer;
 }
 
+
 .header-bottom_mask {
-  height: 100px;
   background-color: #000000;
   z-index: 10;
+  position: fixed;
+  margin-top:20px;
 }
 
+ 
 .header-bottom_content {
   position: absolute;
   width: 100%;
-  height: fit-content;
   min-height: 100px;
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: rgba(0, 0, 0, 1);
   overflow: hidden;
+  position: fixed;
+  align-items: center;
 }
 
 .header-inner_container--bottom {
@@ -260,11 +266,13 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  color: #f3be38;
+  color: #FFC200;
   text-decoration: none;
-  font-size: 24px;
+  font-size: 1.7em;
   font-weight: 600;
 }
+
+
 
 .header-shortcut_area {
   grid-area: shortcut;
@@ -281,10 +289,10 @@
   flex-direction: column;
   font-size: 18px;
   transition: max-height 250ms cubic-bezier(0.05, 0.95, 0.05, 0.95);
-  z-index:99999999999;
 }
 
-.header-shortcut_area:hover .header-shortcut {
+
+.header-shortcut_area:hover .header-shortcut:hover {
   max-height: 1000px;
   transition: max-height 250ms cubic-bezier(0.95, 0.05, 0.95, 0.05);
 }
@@ -318,9 +326,9 @@
   display: block;
   height: 3px;
   width: 3px;
-  background-color: #000000;
   bottom: 0;
   z-index: 1;
+  
 }
 
 .shortcut-header::before {
@@ -346,6 +354,7 @@
 .header-shortcut_area:hover .shortcut-header_bottom_border {
   height: 3px;
   animation: bottom_border_show 150ms;
+
 }
 
 @keyframes bottom_border_show {
@@ -364,6 +373,7 @@
 
 .header-shortcut:nth-child(1):hover ~ .shortcut-header_bottom_border {
   right: 80%;
+  opacity: 0.5;
 }
 
 .header-shortcut:nth-child(2):hover ~ .shortcut-header_bottom_border {
@@ -384,8 +394,10 @@
   margin: 11px 0;
 }
 
+
 .header-shortcut:last-child .shortcut-item_list {
   border-right: 0.5px solid rgba(245, 245, 245, 0.5);
+
 }
 
 .shortcut-item {
@@ -412,7 +424,6 @@
   height: 9.9px;
   border: 2px solid #f3be38;
   position: absolute;
-  top: 0;
   left: 50%;
   transform: translate(-50%, -50%) rotateZ(45deg);
   transition: transform var(--animation-duration);
@@ -425,18 +436,14 @@
   transform: translate(-50%, 2px) rotateZ(45deg);
 }
 
- 
-
- 
-
 .header_search-input {
-  width: 400px;
+  width: 300px;
   background-color: transparent;
   height: 31px;
   font-size: 18px;
   padding-left: 5px;
   line-height: 14px;
-  border-bottom: 0.5px solid #f9db54;
+  border-bottom: 1px solid white;
   border-left: none;
   border-right: none;
   border-top: none;
@@ -448,15 +455,14 @@
 }
 
 .header_search-input:focus {
+  color: rgba(255,255,255,0.8);
   outline: none;
-  color: rgba(255,255,255,0.8)
 }
-
+ 
 
 .header_search-button {
   position: absolute;
   height: 31px;
-  top: 0;
   background-repeat: no-repeat;
   background-position: center;
   background-size: 100% auto;
@@ -712,7 +718,6 @@
 
 .side_menu-container {
   position: fixed;
-  top: 0;
   right: 0;
   bottom: 0;
   width: 0;
@@ -733,7 +738,6 @@
   height: 100%;
   min-width: 300px;
   background-color: #000000;
-  top: 0;
   position: relative;
   transform-origin: left;
   transform: rotateY(0);
@@ -750,4 +754,5 @@
     display: none;
   }
 }
+
 </style>

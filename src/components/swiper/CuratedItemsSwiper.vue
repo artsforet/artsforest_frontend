@@ -1,13 +1,18 @@
 <template>
   <div class="sipwer-curated-container">
     <div class="sipwer-curated-wrapper">
-<div class="swiper-curated-flex" style="width: 100%; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
-  <h3 style="color: white;">큐레이션</h3>
-  <p style="color: white; align-self: flex-end; margin: 0;">
-    <router-link to='/playlist/quration' style="color: white; text-decoration: none">더보기</router-link>
-  </p>
-</div>
+      <div class="swiper-curated-flex" style="width: 100%; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
+          <router-link to='/playlist/curation' style="color: white; text-decoration: none;">
+          <h3 style="font-weight:600">
+              큐레이션
+          </h3>
+          </router-link>
+        <p style="color: white; align-self: flex-end; margin: 0; font-weight: 600">
+          <router-link to='/playlist/curation' style="color: white; text-decoration: none">더보기</router-link>
+        </p>
+      </div>
       <swiper
+        v-if="curation.length > 0"
         :style="{
           '--swiper-navigation-color': '#fff',
           '--swiper-pagination-color': '#fff',
@@ -24,6 +29,7 @@
         class="curatedSwiper"
         :spaceBetween="25"
         :slidesPerView="5"
+        :scrollbar="{ draggable: true }"
       >
         <swiper-slide
           v-for="(curationItem, index) in curation" :key="  index"
@@ -38,11 +44,14 @@
           </div>
         </swiper-slide>
       </swiper>
+      <div v-else class='none-curation'>
+        큐레이션에 등록된 앨범이 없습니다.
+      </div>
       <!-- Custom Navigation Buttons -->
-      <div class="custom-button-prev">
+      <div class="custom-button-prev" v-if="curation.length !== 0">
         <i class="bi bi-chevron-left"></i>
       </div>
-      <div class="custom-button-next">
+      <div class="custom-button-next" v-if="curation.length !== 0">
       <i class="bi bi-chevron-right"></i>
       </div>
     </div>
@@ -55,7 +64,10 @@ import 'swiper/css';
 import 'swiper/css/zoom';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
-import { Zoom, Navigation, Pagination } from 'swiper/modules';
+import 'swiper/css/scrollbar';
+
+
+import { Zoom, Navigation, Pagination, Scrollbar } from 'swiper/modules';
 import { onMounted, ref, defineProps } from 'vue';
 import axios from 'axios';
 import 'bootstrap-icons/font/bootstrap-icons.css'; // Bootstrap Icons CSS
@@ -84,10 +96,9 @@ const addToPlaylistAndPlayFirst = async (tracks) => {
 
   try {
     // Adding all tracks to the playlist
-    console.log("TRACK" + tracks.songs[0].id)
 
     const requests = tracks.songs.map(song => {
-       axios.post(`http://localhost:8000/playlist/add/${song.id}`, {}, {
+       axios.post(`http://localhost:80/playlist/add/${song.id}`, {}, {
         headers: { Authorization: `Bearer ${token}` }
       })
     }
@@ -135,7 +146,7 @@ const addToPlaylistAndPlayFirst = async (tracks) => {
 
 .swiper-slide {
   max-width: 222px;
-  height: 280px;
+  min-height: 280px;
   padding-top: 20px;
 }
 
@@ -158,7 +169,7 @@ const addToPlaylistAndPlayFirst = async (tracks) => {
   align-items: center;
   cursor: pointer;
   position: absolute;
-  top: 50%;
+  top: 55%;
   transform: translateY(-50%) 2s;
   z-index: 10;
 }
@@ -244,6 +255,9 @@ const addToPlaylistAndPlayFirst = async (tracks) => {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  border: 1px solid;
+  border-image: linear-gradient(to bottom right, #FFC200 40%, white 20%, #FFC200 30%);
+  border-image-slice: 1;
 }
 
 .overlay {
@@ -275,5 +289,16 @@ const addToPlaylistAndPlayFirst = async (tracks) => {
   font-size: 50px;
   color: white;
   margin-bottom: 30px;
+
 }
+
+.swiper-curated-flex > a > h3:hover {
+  color: #f3be38;
+}
+
+.none-curation {
+  line-height:100px; 
+  color: white; 
+}
+
 </style>

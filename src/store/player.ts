@@ -32,7 +32,7 @@ export const usePlayerStore = defineStore('player', {
 
       const token = localStorage.getItem('token');
       try {
-        await axios.post(`http://localhost:8000/playlist/add/${audio.id}`, {
+        await axios.post(`http://localhost:80/playlist/add/${audio.id}`, {
           music_id: audio.id,
           token: token
         }, {
@@ -41,7 +41,7 @@ export const usePlayerStore = defineStore('player', {
           }
         });
 
-        const response = await axios.get(`http://localhost:8000/playlist/userplayer`, {
+        const response = await axios.get(`http://localhost:80/playlist/userplayer`, {
           headers: {
             'Authorization': `Bearer ${token}`
           }
