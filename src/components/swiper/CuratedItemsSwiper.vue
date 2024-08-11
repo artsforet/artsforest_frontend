@@ -19,8 +19,8 @@
         }"
         :zoom="true"
         :navigation="{
-          nextEl: '.custom-button-next',
-          prevEl: '.custom-button-prev',
+          nextEl: '.curated-button-next',
+          prevEl: '.curated-button-prev',
         }"
         :pagination="{
           clickable: true,
@@ -48,10 +48,10 @@
         큐레이션에 등록된 앨범이 없습니다.
       </div>
       <!-- Custom Navigation Buttons -->
-      <div class="custom-button-prev" v-if="curation.length !== 0">
+      <div class="curated-button-prev" v-if="curation.length !== 0">
         <i class="bi bi-chevron-left"></i>
       </div>
-      <div class="custom-button-next" v-if="curation.length !== 0">
+      <div class="curated-button-next" v-if="curation.length !== 0">
       <i class="bi bi-chevron-right"></i>
       </div>
     </div>
@@ -121,6 +121,7 @@ const addToPlaylistAndPlayFirst = async (tracks) => {
 
 <style scoped>
 .sipwer-curated-container > .sipwer-curated-wrapper > h3 {
+  
   height: 30px;
   font-weight: 600;
 }
@@ -158,7 +159,7 @@ const addToPlaylistAndPlayFirst = async (tracks) => {
 }
 
 /* Custom Navigation Buttons */
-.custom-button-prev, .custom-button-next {
+.curated-button-prev, .curated-button-next {
   background-color: #464646;
   width: 40px;
   height: 40px;
@@ -174,11 +175,11 @@ const addToPlaylistAndPlayFirst = async (tracks) => {
   z-index: 10;
 }
 
-.custom-button-prev {
+.curated-button-prev {
   left: -20px; /* Half of button width to overlap */
 }
 
-.custom-button-next {
+.curated-button-next {
   right: -20px; /* Half of button width to overlap */
 }
 

@@ -8,20 +8,20 @@
           </h3>
           </router-link>
         <p style="color: white; align-self: flex-end; margin: 0; font-weight: 600">
-          <router-link to='/playlist/curation' style="color: white; text-decoration: none">더보기</router-link>
+          <router-link to='/pd' style="color: white; text-decoration: none">더보기</router-link>
         </p>
       </div>
 
 
-
-          <div v-for="(song, index) in pd" :key="index" class="song-item">
+        <div class="pd-select-item-container">
+          <div v-for="(song, index) in pd" :key="index" class="pd-select-song-item">
             <router-link to='/'>
             <img :src="song.cover" class="song-image" />
             </router-link>
             <div class="song-info">
               <router-link to='/'>
               <div class="song-title">
-                {{ song.title }}
+                {{ song.title }}ㅁㄴㅇㅁㄴㅇㅁㄴ
               </div>
               <div class="song-album">{{ song.album }}</div>
               </router-link>
@@ -36,6 +36,7 @@
             <img src="@/assets/icons/music/pause.png" style="width: 50px" v-if="isPlaying(song)" />
           </button>
       </div>
+    </div>
         <div v-if="pd.length === 0" style="color: white; margin:0"> 등록된 곡이 없습니다.</div>
     </div>
   </div>
@@ -103,7 +104,8 @@ const songs = ref([
   width: 100%;
   background-color: black;
   padding: 20px;
-  padding-bottom: 200px;
+  padding-top: 200px;
+  padding-bottom: 100px;
   box-sizing: border-box;
   margin: 0 auto;
 }
@@ -115,7 +117,7 @@ h3 {
 }
 
 .song-list {
-  width: 1196px;
+  width: 1200px;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
@@ -123,19 +125,23 @@ h3 {
   margin: 0 auto;
 }
 
-.song-item {
+.pd-select-item-container {
+  width: 1200px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;;
+} 
+
+.pd-select-song-item {
   width: 580px;
   display: flex;
-  align-items: center;
   padding-top: 20px;
-  margin: 10px 0;
 }
 
 .song-image {
   width: 75px;
   height: 75px;
   margin-right: 20px;
-  margin-top: 10px;
 }
 
 .song-info {

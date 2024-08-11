@@ -2,9 +2,9 @@
   <div class='song-admin-container'>
     <!-- <CreatePost @new-post="addPost" /> -->
     <br /><br />
-    <div class='table-container'>
+    <div class='pd-home-container'>
       <h4 style="font-weight:600">PD의 선택</h4> <br /><br />
-    <table>
+    <table class="pd-home-table">
       <thead>
         <tr>
           <th></th>
@@ -68,8 +68,17 @@
       </tbody>
     </table>
     </div>
-     <button @click="createAlbum" :disabled="!selectedSongs.length || !albumName || !albumCover">Create Album</button>
-    <p v-if="albumCreatedMessage">{{ albumCreatedMessage }}</p>
+    <div class="pagination">
+        <button @click="prevPage" :disabled="currentPage === 1"> 
+          <i class="bi bi-chevron-left" style="font-size: 14px;"></i>
+         </button>
+        <button v-for="page in pages" :key="page" @click="changePage(page)" :class="{ active: page === currentPage }">
+          {{ page }}
+        </button>
+        <button @click="nextPage" :disabled="currentPage === totalPages"> 
+          <i class="bi bi-chevron-right" style="font-size: 14px"></i>
+        </button>
+      </div>
   </div>
 </template>
 
@@ -185,22 +194,26 @@ export default {
 </script>
 
 <style scoped>
-table {
+.pd-home-container {
+  width: 1200px;
+  height: 100%; /* 최대 높이 설정 */
+  margin: 0 auto;
+}
+
+.pd-home-table {
   width: 100%;
   border-collapse: collapse;
 }
-.table-container {
-  width: 1200px;
-  max-height: 600px; /* 최대 높이 설정 */
-  overflow-y: auto; /* 수직 스크롤 가능 */
-  margin: 0 auto;
-}
-th, td {
+
+
+
+.pd-home-table > th, td {
   /* border: 1px solid #ddd; */
   padding: 20px 0;
   margin: 0;
 }
-th {
+
+.pd-home-table > th {
   color: white;
 }
 
@@ -209,7 +222,7 @@ th {
   color: white;
 }
 
-.curatin-update-info{
+.curatin-update-info {
   display: flex;
   text-align: center;
   

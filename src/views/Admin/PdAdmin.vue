@@ -2,10 +2,16 @@
   <div class='song-admin-container'>
     <br /><br />
     <div class='table-container'>
-      <h3 style="color: white;">PD의 선택</h3> <br /><br />
+
+        <h3 style="color: white;">
+          <router-link to='/pd'> 
+            PD의 선택
+          </router-link>
+        </h3> <br /><br />
+        
       <div class="curatin-update-info"></div>
       <br /><br /><br />
-      <table>
+      <table class="pd-admin-table">
         <thead>
           <tr>
             <th>선택</th>
@@ -34,7 +40,7 @@
   </div>
 </template>
 
-<script>
+<script scope>
 import axios from 'axios';
 
 export default {
@@ -103,7 +109,16 @@ export default {
 </script>
 
 <style sceopd>
-table {
+
+.song-admin-container {
+  width: 100%;
+  height: 100%;
+  color: white;
+  left: 0;
+}
+
+
+.pd-admin-table {
   width: 800px;
   border-collapse: collapse;
 }
@@ -112,19 +127,14 @@ table {
   overflow-y: auto; /* 수직 스크롤 가능 */
   margin: 0 auto;
 }
-th, td {
+.pd-admin-table > th, td {
   /* border: 1px solid #ddd; */
   padding: 8px;
 }
-th {
+.pd-admin-table  > th {
   color: white;
 }
 
-.song-admin-container {
-  height: 100vh;
-  color: white;
-  left: 0;
-}
 
 .curatin-update-info {
   display: flex;

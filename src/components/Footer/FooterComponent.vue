@@ -25,9 +25,9 @@
 <style scoped>
 .footer-container {
     width: 100%;
+    height: 40vh;
     background-color: #202020;
     text-align: start;
-    padding-bottom: 200px;
     z-index: 99999999;
     color: white;
 }

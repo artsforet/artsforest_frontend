@@ -8,7 +8,7 @@
           :src="songs[0].song.cover" 
           alt="Album Cover" 
           class="album-cover" 
-          style="width: 250px; height: 250px; border-radius: 15px;" 
+          style="width: 200px; height: 200px; border-radius: 15px;" 
         />
 
         <div class="album-info">
@@ -17,7 +17,7 @@
           <p v-if="songs[0]" class="album-detail">
             시리즈 
             <span class="album-series">{{ songs[0].song.series }}</span>
-          </p>32qwDAQWAED 
+          </p> 
         </div>
       </div>
       <br />
@@ -40,7 +40,6 @@
           </div>
 
           <button @click="playPauseSong(song.song)" class="button-custom">
-            <i class="bi bi-play-fill" v-if="!isPlaying(song)"></i>
             <i class="bi" :class="[isPlaying(song) ? 'bi-pause-fill' : 'bi-play-fill']"></i>
           </button>
 
@@ -190,14 +189,15 @@ const formatTime = (seconds) => {
 }
 
 .album-cover {
-  min-width: 200px;
-  height: 200px;
+  width: 100px;
+  height: 1000px;
   margin-right: 20px;
 }
 
 .album-info {
   display: flex;
   flex-direction: column;
+  margin-left: 50px;
 }
 
 .album-info h2 {
@@ -215,8 +215,6 @@ const formatTime = (seconds) => {
 }
 
 .album-series {
-  border: 1px solid white;
-  border-radius: 25px;
   padding: 5px 10px;
   font-size: 12px;
   color: #ccc;

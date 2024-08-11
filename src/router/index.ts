@@ -26,6 +26,7 @@ import CurationDelete from '@/views/Admin/CurationDelete.vue';
 import HomeAdmin from '@/views/Admin/HomeAdmin/HomeAdmin.vue';
 import AdminMaster from '@/views/Admin/AdminMaster.vue';
 import PdAdmin from '@/views/Admin/PdAdmin.vue';
+import MyPage from '@/views/Admin/MyPage.vue';
 
 import PdHome from '@/views/Page/etcPage/PdHome.vue';
 import SeriesMusic from '@/views/Page/soundFactory/SeriesMusic.vue';
@@ -45,7 +46,7 @@ const router = createRouter({
       children: [
         { path: 'curation', name: 'songAdmin', component: SongAmdin },
         { path: 'curation/delete', name: 'curationDelete', component: CurationDelete },
-        { path: 'pdadmin', name: 'pdAdmin', component: PdAdmin   }
+        { path: 'pdadmin', name: 'pdAdmin', component: PdAdmin }
       ],
     },
     {
@@ -140,6 +141,11 @@ const router = createRouter({
       path: '/freeyard',
       name: 'freeYard',
       component: FreeYard
+    },
+    {
+      path: '/myPage',
+      name: 'myPage',
+      component: MyPage
     }
   ],
   scrollBehavior(to, from, savedPosition) {

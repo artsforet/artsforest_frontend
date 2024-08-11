@@ -39,7 +39,7 @@ function close() {
   background-color: black;
   display: flex;
   justify-content: center;
-  z-index: -1000000;
+  z-index: 999999999;;
 }
 
 .modal-wrapper {
@@ -48,7 +48,7 @@ function close() {
 
 .modal-container {
   width: 500px;
-  height:100%;
+  height:80%;
   background: black;
   border-radius: 5px;
   padding: 20px;

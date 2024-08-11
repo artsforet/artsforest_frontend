@@ -229,9 +229,10 @@
 
 .header-bottom_mask {
   background-color: #000000;
-  z-index: 10;
+  z-index: 1000;
   position: fixed;
   margin-top:20px;
+  padding-bottom: 100px;
 }
 
  

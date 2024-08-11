@@ -1,8 +1,12 @@
 <template>
 <div class="header-content-main">
   <ul class="headear-content-main-list">
-    <li class="header-content_user" v-if="loggedInUser">
-      <span @click="toggleDropdown" style="cursor: pointer">{{loggedInUser}}</span>
+    <li class="header-content_user">
+      <img src="@/assets/image/topBanner/topBanner.gif"  v-if="!isPlaying" style="width: 350px"/>
+      &nbsp; &nbsp; &nbsp;
+    </li>
+    <li v-if="loggedInUser">
+      <span @click="toggleDropdown" style="cursor: pointer; margin-left: 600px">{{loggedInUser}}</span>
       <div v-if="showDropdown" class="dropdown_list">
         <div><router-link to="/">마이페이지</router-link></div>
         <div><router-link to="/upload">업로드</router-link></div>
@@ -10,12 +14,12 @@
         <div><router-link to="/">1:1 문의 내역</router-link></div>
         <div @click="logout" style="cursor: pointer">로그아웃</div>
       </div>
-  </li>
+   </li>
    <li v-else>
     <router-link to="/login"> 로그인 </router-link> 
    </li>
     <li> 
-      <router-link to="/">
+      <router-link to="/" style="min-width: 120px;">
         비대면 바우처 
       </router-link>
     </li>
@@ -76,8 +80,8 @@ onMounted(() => {
 
 .header-content-main {
   width: 100%;
-  height: 30px;
-  line-height: 30px;
+  height: 40px;
+  line-height: 40px;
   background-color: #202020;
   color: white;
   padding: 0;
@@ -92,22 +96,22 @@ onMounted(() => {
 }
 
 .headear-content-main-list {
+  width: 1197px;
   display: flex;
-  justify-content: space-between;
   list-style: none;
   height: inherit;
   background-color: #202020;
   z-index: 9999;
+  padding: 0;
 }
 
 .headear-content-main-list li {
-  margiN: 0 20px;
 }
 
 .headear-content-main-list li > a {
-  margin: 0 20px;
   color: white;
   text-decoration: none;
+  margin-left: 20px;
 }
 
 .header-content_user {
@@ -116,10 +120,8 @@ onMounted(() => {
 
 .dropdown_list {
   width: 280px;
-  height: 170px;
-  right: 0;
   margin-top: 10px;
-  position: absolute;
+  margin-left: 400px;
   background-color: #333;
   list-style: none;
   padding: 10px;
@@ -142,4 +144,7 @@ onMounted(() => {
   color: rgba(255,255,255, 0.8)
 }
 
+img {
+  border-radius: 2px;
+}
 </style>

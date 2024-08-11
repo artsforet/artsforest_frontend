@@ -8,8 +8,8 @@
 
 
         <button @click="playPause" class="button-custom">
-          <img src="@/assets/icons/music/play01.png" v-if="!isPlaying" style="width: 30px" />
-          <img src="@/assets/icons/music/pause01.png"  v-if="isPlaying" style="width: 30px"/>
+          <img src="@/assets/icons/music/pause01.png"  v-if="!isPlaying" style="width: 30px"/>
+          <img src="@/assets/icons/music/play01.png" v-if="isPlaying" style="width: 30px" />
           <!-- <i class="bi bi-pause-fill" v-if="isPlaying(song)"></i> -->
         </button>
 
@@ -49,11 +49,54 @@
         </div>
       </div>
 
-      <button @click="initModal" class="button-custom">
+      <button class="button-custom" @click="playlistModalOpen">
         <i class="bi bi-music-note-list" style="font-size: 30px;"></i>
-      </button>
+      </button> 
+      <div
+         v-if="openModal === true"
+         style="position: fixed; background-color: black; color: white;  width: 400px; height: 80vh; right: 0;  top: 120px; bottom:100px; z-index: 99;  display: flex; background-color:#202020; border-left:1px solid #333"
+        >
+
+        <!-- <div style="min-width: 400px; display: flex; color: white; "> -->
+          <!-- <span style="line-height: 40px"> 유저의 플레이리스트 </span> -->
+        <!-- <span
+          @click="playlistModalOpen" 
+          > 닫기
+        </span> -->
+        <!-- </div> -->
+        
+        <ul class="user-playlist">
+            <li
+              v-for="(song, index) in playlist"
+              :key="song.id"
+              class="user-playlist-item"
+              @click="userlistPlay(song.music, index)"
+              :class="{ 'current-song': currentSongIndex === index }"
+            >
+              <div class="user-playlist-info" style="align-items:center">
+                <div class="user-playlist-no">
+                  {{ index }}
+                </div>
+                <div class="user-playlist-meta" style="display: flex; align-items:center" >
+                  <img :src="song.music.cover" alt="앨범 자켓" style="width:50px; height: 50px; font-size:1rem; margin-right: 20px; color: #333"/>
+                  <div style="flex-direction: column; left; font-size:0.8em; cursor: pointer">
+                    {{ song.music.title }} <br />
+                    {{ song.music.description }}
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+     <div class="playlist-modal-container">
+        <!-- <div class="" style="display: flex; margin:0 auto;"> 
+          <img :src="list.music.cover" alt=list.music.title width="50px" />
+          {{ list.music.title }}
+        </div> -->
+      </div>
     </div>
-    <PlaylistModal v-if="showModal" @close="showModal = false" class="playlist-modal">
+    </div>
+
+    <!-- <PlaylistModal v-if="showModal" @close="showModal = false" class="playlist-modal">
       <template v-slot:header>
         <h3>플레이 리스트</h3>
       </template>
@@ -80,10 +123,7 @@
             </ul>
         </div>
       </template>
-      <template v-slot:footer>
-        <button @click="showModal = false">닫기</button>
-      </template>
-    </PlaylistModal>
+    </PlaylistModal> -->
   </div>
 </template>
 <script setup>
@@ -106,8 +146,26 @@ const playlist = ref([]);
 const currentSongIndex = ref(0);
 const currentTime = ref(0);
 const duration = ref(0);
+const openModal = ref(false);
 
-const initModal = async () => {
+// const initModal = async () => {
+//   try {
+//     const token = localStorage.getItem('token');
+//     const response = await axios.get('http://localhost:80/playlist/userplayer', {
+//       headers: {
+//         Authorization: `Bearer ${token}`
+//       }
+//     });
+//     showModal.value = !showModal.value;
+//     playlist.value = response.data;
+//   } catch (error) {
+//     console.error('Error fetching playlist:', error);
+//   }
+// };
+
+
+
+const fetchPlaylist = async () => {
   try {
     const token = localStorage.getItem('token');
     const response = await axios.get('http://localhost:80/playlist/userplayer', {
@@ -183,6 +241,10 @@ const playNextSong = () => {
   saveState();
 };
 
+  const playlistModalOpen = () => {
+    openModal.value = !openModal.value;
+  }
+
 const changeVolume = (event) => {
   const volume = event.target.value / 100;
   wavesurfer.value.setVolume(volume);
@@ -234,6 +296,8 @@ onMounted(() => {
     barWidth:2,
   });
 
+  fetchPlaylist();
+
   wavesurfer.value.on('audioprocess', () => {
     currentTime.value = wavesurfer.value.getCurrentTime();
     saveState();
@@ -256,10 +320,11 @@ onBeforeUnmount(() => {
   width: 100%;
   display: flex;
   align-items: center;
+  position: relatiuve;
+  z-index: 99999;
 }
 
 #current-song-info {
-  width: 100%;
 }
 
 .current-song-info {
@@ -268,6 +333,7 @@ onBeforeUnmount(() => {
 }
 
 .current-song-info-text {
+  width: 220px;
   margin-left: 10px;
   text-align: left;
   display: flex;
@@ -283,6 +349,7 @@ onBeforeUnmount(() => {
 }
 
 .time-info {
+  width:100px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -304,9 +371,8 @@ onBeforeUnmount(() => {
 .volume-bar {
   position: absolute;
   right: 0;
-  bottom: 70px;
+  bottom: 100px;
   width: 30px;
-  height: 100px;
   background-color: #000; /* 변경: 검은색 배경 */
   display: flex;
   justify-content: center;
@@ -335,19 +401,27 @@ onBeforeUnmount(() => {
   color: white;
 }
 
+
+/* MODAL */ 
+
 .playlist-modal {
-  display: flex;
   height: 100%;
 }
 
 .modal-container {
-  overflow-y:auto;
 }
+
+
+.scroll p {
+  font-size: 2rem;
+  padding: 0.6rem 1rem;
+  background: #febf00;
+}
+
+/* 스크롤바 생성 */
 .playlist-body {
   flex-grow: 1;
   overflow-y: auto;
-  -ms-overflow-style: none; /* 인터넷 익스플로러, 엣지 */
-  scrollbar-width: none; /* 파이어폭스 */
 }
 
 .playlist-body::-webkit-scrollbar {
@@ -356,20 +430,17 @@ onBeforeUnmount(() => {
 
 .playlist-modal header,
 .playlist-modal .modal-header {
-  background: black;
   padding: 10px;
   border-bottom: 1px solid #ccc;
 }
 
 .modal-body {
-  overflow-y: auto;
 }
 .playlist-modal .modal-footer {
   position: sticky;
   bottom: 0;
-  background: black; /* 필요한 경우 다른 배경색으로 변경 */
+  background: #202020; /* 필요한 경우 다른 배경색으로 변경 */
   padding: 10px;
-  border-top: 1px solid #ccc;
   text-align: right; /* 필요한 경우 다른 정렬 방식으로 변경 */
 }
 
@@ -380,25 +451,37 @@ onBeforeUnmount(() => {
   overflow-y: auto
 }
 
+ 
+.user-playlist::-webkit-scrollbar {
+  display: none;
+}
+
+.user-playlist {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+
 .user-playlist-item {
   display: flex;
   margin: 0;
   padding: 0;
   padding-left: 20px;
+  color: white;
 }
 
 .user-playlist-info {
-  width: 100%;
+  width: 400px;
   margin-top: 20px;
   text-align: start;
   padding: 0;
-  display: flex;
-  align-items: center;
+  display: flex; 
 }
 
 .user-playlist-no {
-  width: 100px;
+  width: 20px;
   align-items: center;
+  margin-right: 10px;
 }
 
 .user-playlist-meta {
@@ -406,10 +489,11 @@ onBeforeUnmount(() => {
 }
 
 .current-song .user-playlist-no {
-  color: blue;
+  /* color: blue; */
 }
 
 .modal-body {
-  overflow-y: auto;
+  /* overflow-y: auto; */
 }
+
 </style>

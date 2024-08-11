@@ -127,7 +127,7 @@ const pages = computed(() => {
 });
 
 onMounted(() => {
-  fetchCuration();
+    fetchCuration();
 });
 </script>
 
@@ -146,8 +146,10 @@ onMounted(() => {
       />
     </center>
     <br /><br />
-    <div v-if="isLoading" class="loading">
-      Loading...
+    <div  v-if="isLoading" style="margin: 0 auto; justify-content: center;">
+      <center>
+      <div class="loading" id="loading"> </div>
+    </center>
     </div>
     <div v-else-if="errorMessage" class="error">
       {{ errorMessage }}
@@ -216,7 +218,8 @@ onMounted(() => {
 }
 
 .album-cover {
-  width: 100%;
+  width: 300px;
+  height: 300pxz;
   height: auto;
   object-fit: cover;
 }
@@ -252,6 +255,28 @@ onMounted(() => {
   background-color: #f3be38;
   font-weight: bold;
   border: none;
+}
+
+
+#loading {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border: 10px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  border-top-color: #f3be38;
+  animation: spin 1s ease-in-out infinite;
+  margin: 0 auto;
+  justify-content: center;
+  text-align: center;;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
 }
 
 </style>

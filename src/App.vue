@@ -5,16 +5,19 @@
       <HeaderContent  />
       <HeaderComponent v-if="!hideNavBar"/>
     </div>
+    <br /><br />
     <main class="main-content">
     <router-view 
       @songSelected="handleSongSelected" />
     </main>
     <!-- 하단 공통 MusicBar -->
-    <PlayBar :selectedSong="selectedSong" />
     <div class='app-footer'>
-    <FooterComponent />
+      <FooterComponent />
     </div>
-  </div>
+    <div class="common-player">
+      <PlayBar :selectedSong="selectedSong" />
+    </div>
+</div>
 </template>
 
 <script setup>
@@ -40,10 +43,11 @@ const hideNavBar = computed(() => {
 </script>
 
 <style>
-#app {
-  overflow-y: auto;
-}
 .header-main {
-  padding-bottom: 100px;
 }
+
+ 
+ .common-player {
+  padding-top: 100px;
+ }
 </style>

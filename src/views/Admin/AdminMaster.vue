@@ -1,62 +1,64 @@
 <template>
-  <div class="admin-master-all">
-    <div class="admin-master">
-      <div class="admin-nav">
-        <h2> ADMIN </h2>
-        <ul>
-          <li><router-link to="/master/curation"> 큐레이션 등록 </router-link></li>
-          <li><router-link to="/master/curation/delete"> 큐레이션 삭제 </router-link></li>
-          <li><router-link to="/master/pdadmin"> PD의 선택 </router-link></li>
-        </ul>
-      </div>
-      <div class="router-container">
-        <div class="router-container-wrap">
-          <router-view></router-view>
-        </div>
-      </div>
+  <div id="admin">
+    <div class="layout">
+      <ul class="admin-nav">
+        <li> 
+          <router-link to="/">
+          <h3> Admin </h3>
+          </router-link>
+        </li>
+        <li> <router-link to="/">Home</router-link></li>
+        <li> <router-link to="/about">About</router-link></li>
+        <li> <router-link to="/dashboard">Dashboard</router-link></li>
+        <li> <router-link to="/dashboard/settings">Settings</router-link></li>
+      </ul>
+      <main class="content">
+        <router-view></router-view>
+      </main>
     </div>
   </div>
 </template>
 
 <style scoped>
-.admin-master {
-  display: flex;
+ 
+.main-content {
+  width: 100%;
+  background-color: black;
+ }
+#admin {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  margin-top: 60px;
+  padding-top: 100px;
+  background-color: black;
   color: white;
+}
+
+.layout {
+  max-width: 100%;
+  display: flex;
+  height: 100vh;
 }
 
 .admin-nav {
-  min-width: 400px;
-  background-color: #212121;
-  padding-top: 50px;
-  padding-left: 50px;
+  width: 250px;
+  padding: 20px;
+  color: black;
+  text-align: start;
+  top: 0;
 }
 
-.admin-nav  > ul > li {
-  list-style: none;
+.admin-nav > a {
+  color: #fff;
 }
-
-.admin-nav  > ul > li > a {
+.admin-nav > li > a {
   color: white;
   text-decoration: none;
-  line-height: 40px;
+  line-height: 60px;
 }
-
-.admin-nav  > ul > li > a:hover {
-  color: rgba(255,255,255, 0.6)
+.content {
+  flex: 1;
+  padding: 20px;
+  top: 0;
+  padding-top: 50px;
 }
-
-
-.router-container {
-  width: 100%;
-  padding: auto;
-  margin: 0 auto;
-  background-color: #212121;
-}
-
-.router-container-wrap {
-  width: 1920px;
-  margin: 0 auto;
-}
-
-
 </style>

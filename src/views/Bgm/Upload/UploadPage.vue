@@ -207,9 +207,9 @@ export default {
       });
     },
     
-    selectSong(index) {
-      this.selectedSongIndex = index;
-    },
+    // selectSong(index) {
+    //   this.selectedSongIndex = index;
+    // },
     handleMultipleMusicFileChange(event) {
       const files = Array.from(event.target.files);
       this.selectedFiles = files;

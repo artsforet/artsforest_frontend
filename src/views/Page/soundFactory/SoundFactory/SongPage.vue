@@ -19,7 +19,9 @@
           </div>
           <div class="song-info">
             <router-link :to="{ name: 'SongDetail', params: { id: song.id } }">
-              <div class="item-title">{{ song.title }}</div>
+              <div class="item-title">{{ song.title }}
+               <span v-if="song.isPublic" style="background-color:#FFC200; color:#333;font-weight: 600; text-align:center; width:60px; font-size: 0.8rem; border-radius: 5px; padding: 2px">무료 음악</span>
+              </div>
               <div style="font-size:13px; color: #888">{{ song.description }}</div>
             </router-link>
             <div class="song-tags">
@@ -320,9 +322,11 @@ div {
 }
 .song-common-layout{
   width: 100%;
-  height: 100vh;
+  height: 100%;
   background-color: rgb(26, 26, 26);
   color: white;
+  position: rrelative;
+  padding-bottom: 100px;
 }
 
 .song-common-page {

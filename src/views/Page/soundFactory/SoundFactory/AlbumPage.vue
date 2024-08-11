@@ -132,7 +132,8 @@ div {
 }
 .song-common-layout{
   width: 100%;
-  height: 100vh;
+  height: 100%;
+  padding-bottom: 100px;
   background-color: rgb(26, 26, 26);
   color: white;
 }
