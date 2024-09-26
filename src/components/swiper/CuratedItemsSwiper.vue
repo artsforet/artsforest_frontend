@@ -29,7 +29,9 @@
         class="curatedSwiper"
         :spaceBetween="25"
         :slidesPerView="5"
-        :scrollbar="{ draggable: true }"
+        :scrollbar="{
+          el: '.swiper-curated-scrollbar'
+        }"
       >
         <swiper-slide
           v-for="(curationItem, index) in curation" :key="  index"
@@ -54,6 +56,8 @@
       <div class="curated-button-next" v-if="curation.length !== 0">
       <i class="bi bi-chevron-right"></i>
       </div>
+      <div class="swiper-curated-scrollbar"></div>
+
     </div>
   </div>
 </template>
@@ -76,6 +80,9 @@ import 'bootstrap-icons/font/bootstrap-icons.css'; // Bootstrap Icons CSS
 const isPlaying = (song) => {
   return eventBus.selectedSong && eventBus.selectedSong.id === song.id && eventBus.playPause;
 };
+
+const modules = [Navigation, Pagination, Scrollbar];
+
 
 const props = defineProps({
   allTracks: {
@@ -121,14 +128,13 @@ const addToPlaylistAndPlayFirst = async (tracks) => {
 
 <style scoped>
 .sipwer-curated-container > .sipwer-curated-wrapper > h3 {
-  
   height: 30px;
   font-weight: 600;
 }
 
 .sipwer-curated-container {
   width: 100%;
-  height: 50vh;
+  height: 40vh;
   background-color: black;
   align-items: center;
   text-align:start;
@@ -204,6 +210,7 @@ const addToPlaylistAndPlayFirst = async (tracks) => {
   font-size: 18px;
   transition: transform 0.2s; /* 부드러운 애니메이션 설정 */
 }
+
 .overlay {
   position: absolute;
   top: 0;
@@ -256,7 +263,6 @@ const addToPlaylistAndPlayFirst = async (tracks) => {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border: 1px solid;
   border-image: linear-gradient(to bottom right, #FFC200 40%, white 20%, #FFC200 30%);
   border-image-slice: 1;
 }
@@ -300,6 +306,18 @@ const addToPlaylistAndPlayFirst = async (tracks) => {
 .none-curation {
   line-height:100px; 
   color: white; 
+}
+
+/*  SCROLL BAR  */
+.swiper-curated-scrollbar{
+  width: 100%;
+  max-height: 1px;
+  margin-top: 20px;
+} 
+
+.swiper-curated-scrollbar {
+  background: red;
+  border: 1px solid black;
 }
 
 </style>

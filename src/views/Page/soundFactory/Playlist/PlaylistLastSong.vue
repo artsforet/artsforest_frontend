@@ -1,61 +1,93 @@
- <script setup>
+<script setup>
 import { ref, computed, onMounted } from "vue";
 import axios from "axios";
 import eventBus from '@/eventBus';
 
-const albumList = ref([]);
-const allTracks = ref([]); // 모든 노래 목록을 저장할 배열
+const curation = ref([]);
+const allTracks = ref([]);
 
 const currentPage = ref(1);
-const itemsPerPage = 25; // 한 페이지당 최대 25개 (5줄 x 5개)
+const itemsPerPage = 16;
 
-const fetchAlbum = async () => {
+const searchQuery = ref("");
+const isLoading = ref(false);
+const errorMessage = ref("");
+
+// Fetching curation data and grouping by unique curation name
+const fetchCuration = async () => {
+  isLoading.value = true;
+  errorMessage.value = "";
   try {
-    const response = await axios.get("http://localhost:80/music/soundfactory/");
-    albumList.value = response.data;
+    const response = await axios.get("http://localhost:80/music/lastsong/all");
 
-    // 모든 노래 목록을 수집
-    response.data.forEach(album => {
-      album.albums.forEach(subAlbum => {
-        allTracks.value.push(...subAlbum.tracks);
-      });
-    });
+    // Group albums by curation name and keep only one entry per name
+    const groupedCurations = response.data.reduce((acc, album) => {
+      if (!acc[album.name]) {
+        acc[album.name] = { ...album, songs: [] };
+      }
+      acc[album.name].songs.push(...album.songs);
+      return acc;
+    }, {});
+
+    // Convert grouped data back into an array
+    curation.value = Object.values(groupedCurations);
+    allTracks.value = curation.value.flatMap(album => album.songs);
+
   } catch (error) {
-    console.error("Error fetching albums:", error);
+    errorMessage.value = "방금그곡이 없습니다.";
+    console.error("Error fetching curation:", error);
+  } finally {
+    isLoading.value = false;
   }
 };
 
+// Adding tracks to the playlist and playing the first one
 const addToPlaylistAndPlayFirst = async (tracks) => {
   const token = localStorage.getItem('token');
-  const requests = tracks.map(song => {
-    return axios.post(`http://localhost:80/playlist/add/${song.id}`, {}, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-    });
-  });
+  if (!token) {
+    console.error("User is not authenticated.");
+    return;
+  }
 
   try {
-    const responses = await Promise.all(requests);
-    console.log("All tracks added to playlist:", responses);
+    // Adding all tracks to the playlist
+    console.log("TRACK" + tracks.songs[0].id)
 
-    // 첫 번째 트랙 재생
-    const firstTrack = tracks[0];
-    eventBus.selectedSong = firstTrack;
+    const requests = tracks.songs.map(song => 
+      axios.post(`http://localhost:80/playlist/add/${song.id}`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
+    );
+    await Promise.all(requests);
+    console.log("Tracks successfully added to the playlist.");
+
+    // Play the first track
+    eventBus.selectedSong = tracks.songs[0];
     eventBus.playPause = true;
   } catch (error) {
-    console.error("Error adding tracks to playlist:", error);
+    console.error("Error adding tracks to playlist or playing the song:", error);
   }
 };
+
+const filteredTracks = computed(() => {
+  if (!searchQuery.value.trim()) {
+    return curation.value;
+  }
+
+  return allTracks.value.filter(track =>
+    track.title.toLowerCase().includes(searchQuery.value.toLowerCase()) || 
+    track.artist.toLowerCase().includes(searchQuery.value.toLowerCase())
+  );
+});
 
 const paginatedItems = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage;
   const end = start + itemsPerPage;
-  return allTracks.value.slice(start, end);
+  return filteredTracks.value.slice(start, end);
 });
 
 const totalPages = computed(() => {
-  return Math.ceil(allTracks.value.length / itemsPerPage);
+  return Math.ceil(filteredTracks.value.length / itemsPerPage);
 });
 
 const nextPage = () => {
@@ -70,83 +102,182 @@ const prevPage = () => {
   }
 };
 
+const changePage = (page) => {
+  currentPage.value = page;
+};
+
+const pages = computed(() => {
+  const total = totalPages.value;
+  const current = currentPage.value;
+  const range = [];
+
+  let start = Math.max(current - 5, 1);
+  let end = Math.min(current + 4, total);
+
+  if (current <= 5) {
+    end = Math.min(10, total);
+  } else if (current + 4 >= total) {
+    start = Math.max(total - 9, 1);
+  }
+
+  for (let i = start; i <= end; i++) {
+    range.push(i);
+  }
+  return range;
+});
+
 onMounted(() => {
-  fetchAlbum();
+    fetchCuration();
 });
 </script>
 
 <template>
-<div class="song-common-layout"> 
-  <br /><br /><br />
-  <div class="song-common-page">
-  <h2 style="font-weight:600">앨범 > BGM </h2> <br/>
-  <div class="song-common-page">
-      <div>
-        <ul class="soundfactory-album-item">
-          <li 
-            v-for="(track, index) in paginatedItems" 
-            :key="index" 
-            @click="() => addToPlaylistAndPlayFirst([track])"
-            class="album-content"
+<div class="song-curation-layout">
+  <div class="song-curation-page">
+    <center>
+      <h2 style="font-weight:600">방금 그곡</h2>
+      <p> '방금그곡'에서 TV와 라디오 프로그램에 나왔던 예숧숲 음악을 만나보세요! </p>
+      <input 
+        type="search" 
+        style="width: 500px; height: 50px; border-radius: 7px; padding: 0 10px; font-weight: 600" 
+        placeholder="검색어를 입력하세요!" 
+        v-model="searchQuery" 
+        aria-label="Search for tracks"
+      />
+    </center>
+    <br /><br />
+    <div  v-if="isLoading" style="margin: 0 auto; justify-content: center;">
+      <center>
+      <div class="loading" id="loading"> </div>
+    </center>
+    </div>
+    <div v-else-if="errorMessage" class="error">
+      {{ errorMessage }}
+    </div>
+    <div v-else class="song-curation-album-item">
+      <ul class="grid-container">
+        <li 
+          v-for="(curationItem, index) in curation" 
+          :key="index" 
+          class="album-content"
+          tabindex="0"
+          aria-label="Play songs in {{ curationItem.name }}"
+        >
+          <img 
+            :src="curationItem.cover" 
+            @click="() => addToPlaylistAndPlayFirst(curationItem)"
+            alt="Album Cover" 
+            class="lastsong-cover"
           >
-            <img 
-              :src="track.cover" 
-              alt="Album Cover" 
-              class="album-cover"
-            > <br />
-            {{ track.album }} <br /> 
-            {{ track.description }}
-          </li>
-        </ul>
-        <br />
-        <button @click="prevPage" :disabled="currentPage === 1">Previous</button>
-        <button @click="nextPage" :disabled="currentPage === totalPages">Next</button>
+          <br />
+          {{ curationItem.name }}
+        </li>
+      </ul>
+      <br />
+      <div class="pagination">
+        <button @click="prevPage" :disabled="currentPage === 1"> 
+          <i class="bi bi-chevron-left" style="font-size: 14px;"></i>
+        </button>
+        <button v-for="page in pages" :key="page" @click="changePage(page)" :class="{ active: page === currentPage }">
+          {{ page }}
+        </button>
+        <button @click="nextPage" :disabled="currentPage === totalPages"> 
+          <i class="bi bi-chevron-right" style="font-size: 14px"></i>
+        </button>
       </div>
     </div>
   </div>
 </div>
 </template>
 
-<style>
-.soundfactory-album-container {
+<style scoped>
+
+.song-curation-layout {
   width: 100%;
-  height: 1200px;
-  text-align: center;
-  background-color: rgba(23,23,23, 1);
+  height: 100vh;
+  background-color: black;
   color: white;
-  padding-top: 250px;
+  padding-top: 20px;
 }
 
-.soundfactory-album-wrap {
-  width: 1196px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
+.song-curation-page {
+  width: 1300px;
   margin: 0 auto;
-
+  padding-top: 100px;
 }
 
-.soundfactory-album-item {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: flex-start;
-  gap: 10px;
-  padding: 0;
-}
-
-.soundfactory-album-item > li {
-  list-style: none;
+.song-curation-album-item .grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
 }
 
 .album-content {
+  list-style: none;
   cursor: pointer;
   text-align: center;
 }
 
-.album-cover {
-  width: 220px;
-  height: 220px;
+.lastsong-cover {
+  width: 222px;
+  height: 234pxz;
+  height: auto;
   object-fit: cover;
 }
+
+.loading,
+.error {
+  color: white;
+  font-size: 18px;
+  margin-top: 20px;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  margin-top: 20px;
+}
+
+.pagination > button {
+  width: 30px;
+  height: 30px;
+  border-radius: 25px;
+  background-color: #484848;
+  color: #bbbbbb;
+  font-weight: 300;
+  margin: 0 5px;
+  border: none;
+}
+
+.pagination button.active {
+  color: #232020;
+  background-color: #f3be38;
+  font-weight: bold;
+  border: none;
+}
+
+
+#loading {
+  display: inline-block;
+  width: 50px;
+  height: 50px;
+  border: 10px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  border-top-color: #f3be38;
+  animation: spin 1s ease-in-out infinite;
+  margin: 0 auto;
+  justify-content: center;
+  text-align: center;;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+
 </style>

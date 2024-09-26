@@ -1,19 +1,15 @@
 <script setup>
 import { ref, computed, onMounted } from "vue";
 import axios from "axios";
-import eventBus from '@/eventBus';
 
 const curation = ref([]);
-const allTracks = ref([]);
-
-const currentPage = ref(1);
-const itemsPerPage = 16;
-
 const searchQuery = ref("");
 const isLoading = ref(false);
 const errorMessage = ref("");
+const itemsPerPage = 20; // 4 columns * 5 rows
+const currentPage = ref(1);
+const allTracks = ref([]);
 
-// Fetching curation data and grouping by unique curation name
 const fetchCuration = async () => {
   isLoading.value = true;
   errorMessage.value = "";
@@ -41,49 +37,14 @@ const fetchCuration = async () => {
   }
 };
 
-const deleteCuration = async (curation) => {
+const deleteCuration = async (curationItem) => {
   try {
-    await axios.delete(`http://localhost:80/music/curation/delete/${curation.name}`);
+    await axios.delete(`http://localhost:80/music/curation/delete/${curationItem.name}`);
     fetchCuration();
   } catch(error){
-    console.error(error)
+    console.error(error);
   }
-}
-
-
-    // @Delete('/curation/delete/:id')
-    // @HttpCode(HttpStatus.NO_CONTENT)
-    // async deleteCuration(@Param('id') id: string) {
-    //   await this.musicService.deleteCuration(Number(id));
-    // }
-
-// Adding tracks to the playlist and playing the first one
-// const addToPlaylistAndPlayFirst = async (tracks) => {
-//   const token = localStorage.getItem('token');
-//   if (!token) {
-//     console.error("User is not authenticated.");
-//     return;
-//   }
-
-//   try {
-//     // Adding all tracks to the playlist
-//     console.log("TRACK" + tracks.songs[0].id)
-
-//     const requests = tracks.songs.map(song => 
-//       axios.post(`http://localhost:80/playlist/add/${song.id}`, {}, {
-//         headers: { Authorization: `Bearer ${token}` }
-//       })
-//     );
-//     await Promise.all(requests);
-//     console.log("Tracks successfully added to the playlist.");
-
-//     // Play the first track
-//     eventBus.selectedSong = tracks.songs[0];
-//     eventBus.playPause = true;
-//   } catch (error) {
-//     console.error("Error adding tracks to playlist or playing the song:", error);
-//   }
-// };
+};
 
 const filteredTracks = computed(() => {
   if (!searchQuery.value.trim()) {
@@ -122,143 +83,129 @@ const changePage = (page) => {
   currentPage.value = page;
 };
 
-const pages = computed(() => {
-  const total = totalPages.value;
-  const current = currentPage.value;
-  const range = [];
-
-  let start = Math.max(current - 5, 1);
-  let end = Math.min(current + 4, total);
-
-  if (current <= 5) {
-    end = Math.min(10, total);
-  } else if (current + 4 >= total) {
-    start = Math.max(total - 9, 1);
-  }
-
-  for (let i = start; i <= end; i++) {
-    range.push(i);
-  }
-  return range;
-});
-
 onMounted(() => {
   fetchCuration();
 });
 </script>
-
 <template>
-<div class="song-curation-layout">
-  <div class="song-curation-page">
-    <center>
-    <br /><br /><br />
-      <h2 style="font-weight:600">큐레이션 삭제</h2>
-      <p> 삭제할 큐레이션을 선택해주세요.</p>
-      <!-- <input 
-        type="text" 
-        style="width: 500px; height: 50px; border-radius: 7px; padding: 0 10px; font-weight: 600" 
-        placeholder="검색어를 입력하세요!" 
-        v-model="searchQuery" 
-        aria-label="Search for tracks"
-      /> -->
-    </center>
-    <br /><br />
-    <div v-if="isLoading" class="loading">
-      Loading...
-    </div>
-    <div v-else-if="errorMessage" class="error">
-      {{ errorMessage }}
-    </div>
-    <div v-else class="song-curation-album-item">
-      <ul class="grid-container">
-        <li 
-          v-for="(curationItem, index) in curation" 
-          :key="index" 
-          class="album-content"
-          tabindex="0"
-          aria-label="Play songs in {{ curationItem.name }}"
+<div class="curation-delete-container">
+  
+  <h3 class="curation-delete-wrapper"> 
+    큐레이션 삭제 
+    <hr />
+  </h3>
+
+  <div class="curation-delete-items">
+    <ul 
+      class="curation-delete-items-form" 
+      style="
+        display: flex; 
+        flex-wrap: wrap;
+        margin: 0 auto;
+        justify-content: flex-start;
+        padding: 0;
+        width: 1200px;
+      ">
+      <li 
+        v-for="(curationItem, index) in curation" 
+        :key="index" 
+        class="curation-delete-items-album-cover"
+        tabindex="0"
+        aria-label="Play songs in {{ curationItem.name }}"
+      >
+        <img 
+          :src="curationItem.cover" 
+          @click="() => deleteCuration(curationItem)"
+          alt="Album Cover" 
+          class="lastsong-cover"
         >
-          <img 
-            :src="curationItem.cover" 
-            @click="() => deleteCuration(curationItem)"
-            alt="Album Cover" 
-            class="album-cover"
-          >
-          <br />
-          {{ curationItem.name }}
-        </li>
-      </ul>
-      <br />
-      <div class="pagination">
-        <button @click="prevPage" :disabled="currentPage === 1"> 
-          <i class="bi bi-chevron-left" style="font-size: 14px;"></i>
-        </button>
-        <button v-for="page in pages" :key="page" @click="changePage(page)" :class="{ active: page === currentPage }">
-          {{ page }}
-        </button>
-        <button @click="nextPage" :disabled="currentPage === totalPages"> 
-          <i class="bi bi-chevron-right" style="font-size: 14px"></i>
-        </button>
-      </div>
-    </div>
+        <br />
+        
+        <span 
+          style="
+            color: white; 
+            text-align: start; 
+            left: 0; 
+            float: left; 
+            margin-top: 10px;"
+          > {{ curationItem.name }} 
+        </span>
+      </li>
+    </ul>
+    <br />
   </div>
 </div>
 </template>
 
 <style>
-.song-curation-layout {
-  width: 100%;
-  height: 100vh;
-  background-color: black;
-  color: white;
-  padding-top: 20px;
-}
-.song-curation-page {
-  width: 1300px;
+
+.curation-delete-container {
+  width: 81%;
+  height: 50vh;
   margin: 0 auto;
-}
-.song-curation-album-item .grid-container {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-}
-.album-content {
-  list-style: none;
-  cursor: pointer;
-  text-align: center;
-}
-.album-cover {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-}
-.loading,
-.error {
-  color: white;
-  font-size: 18px;
-  margin-top: 20px;
-}
-.pagination {
-  display: flex;
   justify-content: center;
+  text-align: center;
+  position: relative;
+}
+
+
+.curation-delete-wrapper {
+  width: 800px;
+  font-weight: 600;
+  padding-bottom: 100px;
+  margin: 0 auto;
+  
+} 
+
+
+.curation-delete-items {
+  text-align: start;
+  left: 0;
+}
+
+
+.curation-delete-items-form {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start; /* 요소를 왼쪽 정렬 */
+  gap: 20px; /* 아이템 간 여백을 지정합니다. */
+  padding: 0;
+  margin: 0 auto;
+  max-width: 1000px; /* 컨테이너의 최대 너비를 설정합니다. */
+}
+
+/* li */
+.curation-delete-items-album-cover {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  flex: 1 1 calc(20% - 20px); /* 5개의 아이템을 한 줄에 배치합니다. 여백을 고려하여 설정합니다. */
+  max-width: 200px; /* 이미지의 최대 크기를 설정합니다. */
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 5px;
-  margin-top: 20px;
+  text-align: start;
+  float: left;
 }
-.pagination > button {
-  width: 30px;
-  height: 30px;
-  border-radius: 25px;
-  background-color: #484848;
-  color: #bbbbbb;
-  font-weight: 300;
-  margin: 0 5px;
-  border: none;
+
+
+.album-cover {
+  max-width: 100%;
+  max-height: 200px;
+  object-fit: cover; /* 이미지가 요소의 크기에 맞게 조정됩니다. */
 }
-.pagination button.active {
-  color: #232020;
-  background-color: #f3be38;
-  font-weight: bold;
-  border: none;
+
+
+
+h3 {
+  width: 100%;
+  color: white;
 }
-</style>
+
+/* .album-cover {
+  max-width: 200px;
+  max-height: 200px;
+} */
+
+</style>  
+

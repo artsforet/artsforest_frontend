@@ -7,36 +7,37 @@
           <h3> Admin </h3>
           </router-link>
         </li>
-        <li> <router-link to="/">Home</router-link></li>
-        <li> <router-link to="/about">About</router-link></li>
-        <li> <router-link to="/dashboard">Dashboard</router-link></li>
-        <li> <router-link to="/dashboard/settings">Settings</router-link></li>
+        <li class="admin-list"> <router-link to="/master/curation">큐레이션 등록</router-link></li>
+        <li class="admin-list" > <router-link to="/master/curation/delete">큐레이션 삭제</router-link></li>
+        <li class="admin-list"> <router-link to="/master/pdadmin">PD의 선택</router-link></li>
+        <li class="admin-list"> <router-link to="/master/lastsong">방금 그곡</router-link></li>
+        <li class="admin-list"> <router-link to="/master/lastsong/delete"> 방금 그곡 제거</router-link></li>
       </ul>
-      <main class="content">
+      <div style="width: 0.5px; height: 90%; border:0.5px solid rgba(255,255,255, 0.1 )"></div>
+      <div class="content">
         <router-view></router-view>
-      </main>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
- 
 .main-content {
-  width: 100%;
   background-color: black;
- }
+}
+
 #admin {
+  width: 100%;
   font-family: Avenir, Helvetica, Arial, sans-serif;
   margin-top: 60px;
   padding-top: 100px;
-  background-color: black;
+  background-color: #212121;
   color: white;
 }
 
 .layout {
-  max-width: 100%;
   display: flex;
-  height: 100vh;
+  height: 70vh;
 }
 
 .admin-nav {
@@ -47,18 +48,24 @@
   top: 0;
 }
 
-.admin-nav > a {
-  color: #fff;
+.admin-nav > li {
+  min-width: 200px;
 }
+
 .admin-nav > li > a {
+  min-width: 200px;
   color: white;
   text-decoration: none;
   line-height: 60px;
 }
+
+.admin-list {
+  min-width: 200px;
+}
+
 .content {
-  flex: 1;
-  padding: 20px;
-  top: 0;
-  padding-top: 50px;
+  flex-grow: 1;
+  padding-bottom: 200px;
+  height: 50vh;
 }
 </style>

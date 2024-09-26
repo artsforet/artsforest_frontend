@@ -2,7 +2,7 @@
   <div class="song-common-layout">
     <br /><br /><br /> <br /><br />
     <div class="song-common-page">
-      <h2 style="font-weight:600">곡 > 예술숲 </h2>
+      <h2 style="font-weight:600"> 곡 > 예술숲 </h2>
       <p style="color: #FFC200"> 템포 전체 | 길이 전체 </p>
       <br />
       <div class="song-list">
@@ -19,7 +19,9 @@
           </div>
           <div class="song-info">
             <router-link :to="{ name: 'SongDetail', params: { id: song.id } }">
-              <div class="item-title">{{ song.title }}</div>
+              <div class="item-title">{{ song.title }}
+               <span v-if="song.isPublic" style="background-color:#FFC200; color:#333;font-weight: 600; text-align:center; width:60px; font-size: 0.8rem; border-radius: 5px; padding: 2px">무료 음악</span>
+              </div>
               <div style="font-size:13px; color: #888">{{ song.description }}</div>
             </router-link>
             <div class="song-tags">
@@ -76,10 +78,13 @@ import eventBus from '@/eventBus';
 import axios from "axios";
 import fillheart from '@/assets/icons/fill-heart.png';
 import nofillheart from '@/assets/icons/no-fill-heart.png';
+import { useRouter } from 'vue-router';
 
 const downloadStore = useDownloadStore();
 const download = ref();
 const songStore = useSongStore();
+const router = useRouter();
+
 const { paginatedSongs, totalPages, currentPage } = storeToRefs(songStore);
 
 const waveSurferInstances = new Map();
@@ -92,7 +97,7 @@ const fetchAlbumSongs = async (albumId) => {
         Authorization: `Bearer ${token}`
       }
     });
-    songStore.setSongs(response.data);  // 노래 목록을 갱신
+    songStore.fetchArtsForestSong(response.data);  // 노래 목록을 갱신
   } catch (error) {
     console.error('Failed to fetch album songs:', error);
   }
@@ -323,6 +328,8 @@ div {
   height: 100vh;
   background-color: rgb(26, 26, 26);
   color: white;
+  position: rrelative;
+  padding-bottom: 100px;
 }
 
 .song-common-page {

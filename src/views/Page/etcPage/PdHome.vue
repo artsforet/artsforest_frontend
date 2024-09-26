@@ -3,7 +3,12 @@
     <!-- <CreatePost @new-post="addPost" /> -->
     <br /><br />
     <div class='pd-home-container'>
-      <h4 style="font-weight:600">PD의 선택</h4> <br /><br />
+    
+      <h4 style="font-weight:600; color: white; text-decoration: none">
+        PD의 선택
+      </h4> 
+      <br /><br />
+    
     <table class="pd-home-table">
       <thead>
         <tr>
@@ -41,8 +46,8 @@
            </td>
           <td class="pd-td-icon"> 
             <button @click="playPauseSong(song)" class="button-custom">
-            <img src="@/assets/icons/music/play01.png" style="width: 30px" v-if="!isPlaying(song)" />
-            <img src="@/assets/icons/music/pause01.png" style="width: 30px" v-if="isPlaying(song)" />
+            <img src="@/assets/icons/music/play01.png" style="width: 25px" v-if="!isPlaying(song)" />
+            <img src="@/assets/icons/music/pause01.png" style="width: 25px" v-if="isPlaying(song)" />
             </button>
            </td>
           <td class="pd-td-icon"> 
@@ -196,7 +201,7 @@ export default {
 <style scoped>
 .pd-home-container {
   width: 1200px;
-  height: 100%; /* 최대 높이 설정 */
+  height: 100vh; /* 최대 높이 설정 */
   margin: 0 auto;
 }
 
@@ -218,6 +223,7 @@ export default {
 }
 
 .song-admin-container {
+  padding-top: 100px;
   background-color: #171717;
   color: white;
 }

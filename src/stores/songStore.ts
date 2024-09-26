@@ -33,6 +33,8 @@ export const useSongStore = defineStore('songStore', {
         console.error('Failed to fetch songs:', error);
       }
     },
+
+
     // BGM FACTORY ALBUM
     async fetchAlubm() {
       try {
@@ -44,7 +46,7 @@ export const useSongStore = defineStore('songStore', {
     },
 
 
-    // SFX 효과음 
+    // SFX 효과음
     async fetchSfxSong() {
       try {
         const response = await axios.get('http://localhost:80/music/soundfactory/sfxEffect');
@@ -65,7 +67,7 @@ export const useSongStore = defineStore('songStore', {
       }
     },
 
-    // 예술숲 곡 
+    // 예술숲 곡
     async fetchArtsForestSong() {
       try {
         const response = await axios.get('http://localhost:80/music/soundfactory/artsForestSong');

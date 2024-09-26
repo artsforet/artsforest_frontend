@@ -2,7 +2,7 @@
   <div class="song-common-layout">
     <br /><br /><br /> <br /><br />
     <div class="song-common-page">
-      <h2 style="font-weight:600"> 사운드팩토리 > 공유마당 </h2>
+      <h2 style="font-weight:600">공유마당 > 무료배포 </h2>
       <p style="color: #FFC200"> 템포 전체 | 길이 전체 </p>
       <br />
       <div class="song-list">
@@ -19,7 +19,9 @@
           </div>
           <div class="song-info">
             <router-link :to="{ name: 'SongDetail', params: { id: song.id } }">
-              <div class="item-title">{{ song.title }}</div>
+              <div class="item-title">{{ song.title }}
+               <span v-if="song.isPublic" style="background-color:#FFC200; color:#333;font-weight: 600; text-align:center; width:60px; font-size: 0.8rem; border-radius: 5px; padding: 2px">무료 음악</span>
+              </div>
               <div style="font-size:13px; color: #888">{{ song.description }}</div>
             </router-link>
             <div class="song-tags">
@@ -298,14 +300,14 @@ onMounted(() => {
   fetchAlbumSongs();
   const token = localStorage.getItem('token');
   
-  songStore.fetchSongs().then(() => {
+  songStore.fetchFreeYard().then(() => {
     initializeWaveSurfer();
   });
 });
 
 
 watch(currentPage, () => {
-  songStore.fetchSongs().then(() => {
+  songStore.fetchFreeYard().then(() => {
     initializeWaveSurfer();
   });
 });
@@ -323,6 +325,8 @@ div {
   height: 100vh;
   background-color: rgb(26, 26, 26);
   color: white;
+  position: rrelative;
+  padding-bottom: 100px;
 }
 
 .song-common-page {

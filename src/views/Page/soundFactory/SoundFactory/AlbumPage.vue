@@ -4,18 +4,17 @@ import axios from "axios";
 import eventBus from '@/eventBus';
 
 const albumList = ref([]);
-const allTracks = ref([]); // 모든 노래 목록을 저장할 배열
+const allTracks = ref([]);
 
 const currentPage = ref(1);
-const itemsPerPage = 20; // 한 페이지당 최대 20개 (5줄 x 4개)
-const maxPages = 10; // 최대 페이지 수
+const itemsPerPage = 20; // 4 columns x 5 rows
+const maxPages = 10;
 
 const fetchAlbum = async () => {
   try {
     const response = await axios.get("http://localhost:80/music/soundfactory/album");
     albumList.value = response.data;
 
-    // 모든 노래 목록을 수집
     response.data.forEach(album => {
       album.albums.forEach(subAlbum => {
         allTracks.value.push(...subAlbum.tracks);
@@ -38,9 +37,6 @@ const addToPlaylistAndPlayFirst = async (tracks) => {
 
   try {
     const responses = await Promise.all(requests);
-    console.log("All tracks added to playlist:", responses);
-
-    // 첫 번째 트랙 재생
     const firstTrack = tracks[0];
     eventBus.selectedSong = firstTrack;
     eventBus.playPause = true;
@@ -83,159 +79,92 @@ onMounted(() => {
 </script>
 
 <template>
-<div class="song-common-layout"> 
-    <br /><br /><br /> <br /><br />
-  <div class="song-common-page">
-     <h2 style="font-weight:600"> 앨범 > BGM </h2>
+<div class="soundfactory-cate-album-page"> 
+  <br /><br /><br /> <br /><br />
+  <div class="soundfactory-cate-album-wrapper">
+    <h2 style="font-weight:600"> 앨범 > SOUND FACTORY </h2>
     <br />
-      <div style="height:40px"></div>
-      <ul class="soundfactory-album-item">
-        <li 
-          v-for="(track, index) in paginatedItems" 
-          :key="index" 
-          @click="() => addToPlaylistAndPlayFirst([track])"
-          class="album-content"
+    <ul class="soundfactory-cate-album-item">
+      <li 
+        v-for="(track, index) in paginatedItems" 
+        :key="index" 
+        @click="() => addToPlaylistAndPlayFirst([track])"
+        class="album-content"
+      >
+        <img 
+          :src="track.cover" 
+          alt="Album Cover" 
+          class="album-cover"
         >
-          <img 
-            :src="track.cover" 
-            alt="Album Cover" 
-            class="album-cover"
-          > <br /><br />
-          {{ track.album }} <br /> 
-        </li>
-      </ul>
-      <br />
-      <div class="pagination">
-        <button @click="prevPage" :disabled="currentPage === 1">
-          <i class="bi bi-chevron-left" style="font-size: 14px;"></i>
-         </button>
-        <button @click="changePage(page)" 
-                :class="{ active: currentPage === page }" 
-                v-for="page in totalPages" 
-                :key="page">
-          {{ page }}
-        </button>
-        <button @click="nextPage" :disabled="currentPage === totalPages">
-        <i class="bi bi-chevron-right" style="font-size: 14px"></i>
-        </button>
-      </div>
+        <br />
+        {{ track.album }}
+      </li>
+    </ul>
+    <div class="pagination">
+      <button @click="prevPage" :disabled="currentPage === 1">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <button @click="changePage(page)" 
+              :class="{ active: currentPage === page }" 
+              v-for="page in totalPages" 
+              :key="page">
+        {{ page }}
+      </button>
+      <button @click="nextPage" :disabled="currentPage === totalPages">
+        <i class="bi bi-chevron-right"></i>
+      </button>
     </div>
+  </div>
 </div>
 </template>
 
-
-
 <style scoped>
-div {
-  margin: 0;
-  padding: 0;
-}
-.song-common-layout{
+.soundfactory-cate-album-page {
   width: 100%;
-  height: 100%;
+  height: 80vh;
   padding-bottom: 100px;
   background-color: rgb(26, 26, 26);
   color: white;
 }
 
-
-.song-common-page {
+.soundfactory-cate-album-wrapper {
   width: 1200px;
   margin: 0 auto;
-
-}
-.playing {
-    color: #f3be38;
 }
 
-.button-custom {
-  margin-top: 10px;
-  background: transparent;
-  color: white;
-  border: none;
-}
-.bi {
-  font-size: 30px;
+.soundfactory-cate-album-item {
+  display: grid;
+  grid-template-columns: repeat(5, 222px); /* 4열, 각 열의 너비를 222px로 고정 */
+  grid-gap: 20px;
+  justify-content: start; /* 항목을 왼쪽 끝으로 정렬 */
+  list-style: none;
+  padding: 0;
+  padding-top: 100px;
 }
 
-.song-list {
+.album-content {
+  text-align: center;
+  font-size: 0.9em;
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
-}
-
-.song-item {
-  display: flex;
   align-items: center;
-  border-bottom: 1px solid #333;
-  padding: 10px 0;
-  display: flex;
-  color: white;
-}
-
-.song-cover-container {
-  margin-right: 20px;
 }
 
 .album-cover {
   width: 222px;
   height: 222px;
   cursor: pointer;
-}
-
-.song-info {
-  flex: 3;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  margin-right: 20px;
-}
-
-.item-title {
-  font-weight: bold;
-}
-
-.song-tags {
-  display: flex;
-  margin-top: 5px;
-}
-
-.song-tag {
-  margin-right: 5px;
-  font-size: 13px;
-  color: #888;
-}
-
-.waveform-custom {
-  flex: 4;
-  margin-right: 20px;
-}
-
-.time-info {
-  flex: 1;
-  font-size: 14px;
-  display: flex;
-  justify-content: center;
-  margin-right: 20px;
-}
-
-.song-actions {
-  display: flex;
-  justify-content: space-around;
-  gap: 10px;
-}
-
-.heart-icon {
-  width: 20px;
-}
-
-a {
-  color: white;
-  text-decoration: none;
+  object-fit: cover;
 }
 
 .pagination {
+  display: flex;
   justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
 }
+
 .pagination > button {
   width: 30px;
   height: 30px;
@@ -243,7 +172,6 @@ a {
   background-color: #484848;
   color: #bbbbbb;
   font-weight: 300;
-  margin: 0 5px;
   border: none;
 }
 
@@ -251,16 +179,5 @@ a {
   color: #232020;
   background-color: #f3be38;
   font-weight: bold;
-  border: none;
 }
-
-.soundfactory-album-item {
-  gap: 20px;
-}
-.album-content {
-  text-align: start;
-  font-size: 0.9em;
-  margin-bottom: 40px;
-}
-
 </style>

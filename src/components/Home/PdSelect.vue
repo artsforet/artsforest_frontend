@@ -3,7 +3,7 @@
     <div class="song-list">
        <div class="swiper-curated-flex" style="width: 100%; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center;">
           <router-link to='/playlist/curation' style="color: white; text-decoration: none;">
-          <h3 style="font-weight:600">
+          <h3 style="font-weight:600;">
               PD의 선택
           </h3>
           </router-link>
@@ -13,15 +13,15 @@
       </div>
 
 
-        <div class="pd-select-item-container">
-          <div v-for="(song, index) in pd" :key="index" class="pd-select-song-item">
+        <div class="pd-select-item-container" v-if="pd">
+          <div v-for="(song, index) in pd" :key="song.id " class="pd-select-song-item">
             <router-link to='/'>
             <img :src="song.cover" class="song-image" />
             </router-link>
             <div class="song-info">
               <router-link to='/'>
               <div class="song-title">
-                {{ song.title }}ㅁㄴㅇㅁㄴㅇㅁㄴ
+                {{ song.title }}
               </div>
               <div class="song-album">{{ song.album }}</div>
               </router-link>
@@ -31,13 +31,13 @@
               </div>
           </div>
       
-          <button @click="playPauseSong(song)" class="button-custom">
+          <button @click="playPauseSong(song)" class="button-custom" style="margin-bottom: 10px" >
             <img src="@/assets/icons/music/play.png" style="width: 50px" v-if="!isPlaying(song)" />
             <img src="@/assets/icons/music/pause.png" style="width: 50px" v-if="isPlaying(song)" />
           </button>
       </div>
-    </div>
-        <div v-if="pd.length === 0" style="color: white; margin:0"> 등록된 곡이 없습니다.</div>
+         <div v-if="pd.length === 0" style="color: white; margin:0; padding: 0;"> 등록된 곡이 없습니다.</div>
+      </div>
     </div>
   </div>
 </template>
@@ -104,7 +104,6 @@ const songs = ref([
   width: 100%;
   background-color: black;
   padding: 20px;
-  padding-top: 200px;
   padding-bottom: 100px;
   box-sizing: border-box;
   margin: 0 auto;
@@ -120,7 +119,7 @@ h3 {
   width: 1200px;
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 30px;
   align-items: center;
   margin: 0 auto;
 }
@@ -156,7 +155,8 @@ h3 {
 }
 
 .song-album {
-  margin-top: 5px;
+  font-size: 0.9em;
+  color: #888;
 }
 
 .song-meta {
@@ -178,6 +178,13 @@ h3 {
   padding: 0;
 }
 
+.song-length {
+  font-size: 0.9em;
+}
+
+.song-bpm {
+  font-size: 0.9em;
+}
 
 .bi {
   font-size: 25px;

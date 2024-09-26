@@ -1,7 +1,7 @@
 <template>
   <div class="button-swiper-container">
     <div class="button-swiper-wrapper">
-      <h3 style="color: white; text-align: start">앨범 시리즈</h3>
+      <h3 style="color: white; text-align: start;">앨범 시리즈ㄴㄴ</h3>
       <br />
       <div class="categories">
         <button
@@ -152,7 +152,7 @@ onMounted(async () => {
 
 
 
-<style>
+<style scoped>
 .button-swiper-container {
   width: 100%;
   padding: 20px;
@@ -242,7 +242,6 @@ onMounted(async () => {
   color: white;
   top: 58%;
   border-radius: 50%;
-  border: 1px solid #fff; /* White circular border */
   background-color: #464646;
 }
 
@@ -261,6 +260,5 @@ onMounted(async () => {
 
 .swiper-scrollbar-drag {
   background: white;
-  border: 1px solid white;
 }
 </style>

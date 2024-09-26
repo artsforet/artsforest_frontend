@@ -1,8 +1,8 @@
 <template>
   <div class="sipwer-curated-container">
     <div class="sipwer-curated-wrapper">
-      <h3 style="color: white"> 영상 속 예술숲 </h3>
-      <br />      <br />      <br />
+      <h3 style="color: white; font-weight: 600"> 영상 속 예술숲 </h3>
+      <br />
       <swiper
         :style="{
           '--swiper-navigation-color': '#fff',
@@ -51,6 +51,7 @@
         <swiper-slide class="swiper-slide-youtube">
           <div class="swiper-slide-youtube-container">
             <img src="https://i.ytimg.com/vi/ib_DhkgdBes/hqdefault.jpg?sqp=-oaymwEcCNACELwBSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLC3YrZcXWYyhEkaRdLvDS9Ga7Ic1Q" alt="" />
+            <a href="https://www.youtube.com/watch?v=ib_DhkgdBes" target="_blank">
             <div 
                 class="artsForest-youtube"
                 style="width: 90%; text-align:start; margin: 0 auto;"
@@ -59,6 +60,7 @@
             <hr />
             <div>[공연] 상사화 (안예은&앙상블더류)_인의예지림 여름음악회 </div>
             </div>
+          </a>
           </div>
         </swiper-slide>
 
@@ -101,7 +103,7 @@
 
 <style scoped>
  .sipwer-curated-container {
-  height: 80vh;
+  height: 50vh;
   background-color: black;
   margin: 0 auto;
  }
@@ -153,6 +155,9 @@ h3 {
   right: -20px; /* Half of button width to overlap */
 }
 
- 
+ a {
+  color: white;
+  text-decoration: none;;
+ }
 
 </style>

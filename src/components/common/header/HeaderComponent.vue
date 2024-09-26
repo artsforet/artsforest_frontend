@@ -137,7 +137,7 @@
 }
 
 .header-inner_container--top > * {
-  white-space: nowrap;
+  /* white-space: nowrap; */
 }
 
 .header-top_menu {
@@ -174,21 +174,6 @@
   animation: header_menu_open 300ms cubic-bezier(0.95, 0.05, 0.95, 0.05) 1;
 }
 
-.header-user_menu {
-  width: 280px;
-}
-
-@keyframes header_menu_open {
-  from {
-    overflow: hidden;
-    max-height: 0;
-  }
-
-  to {
-    overflow: hidden;
-    max-height: 1000px;
-  }
-}
 
 .header-locale-select--hidden {
   display: none;
@@ -280,7 +265,7 @@
   display: flex;
   align-items: stretch;
   position: relative;
-  white-space: nowrap;
+  /* white-space: nowrap; */
 }
 
 .header-shortcut {
@@ -449,6 +434,7 @@
   border-right: none;
   border-top: none;
   color: white;
+  position: relative;
 }
 
 .header_search-input:hover {
@@ -714,7 +700,7 @@
   flex-grow: 1;
   text-overflow: ellipsis;
   overflow: hidden;
-  white-space: nowrap;
+  /* white-space: nowrap; */
 }
 
 .side_menu-container {
@@ -734,26 +720,11 @@
   width: 100%;
 }
 
-.side_menu-wrap {
-  width: min-content;
-  height: 100%;
-  min-width: 300px;
-  background-color: #000000;
-  position: relative;
-  transform-origin: left;
-  transform: rotateY(0);
-  transition: transform 300ms;
-}
-
+ 
 .side_menu-container--visible .side_menu-wrap {
   transform: rotateY(0);
 }
  
 
-@media (min-width: 768.02px) {
-  .header-mobile_area {
-    display: none;
-  }
-}
 
 </style>

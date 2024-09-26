@@ -2,20 +2,37 @@
   <div class="music-bar">
     <div id="current-song-info" style="justify-content:">
       <div class="current-song-info">
-        <!-- <button @click="playPause" class="button-custom" style="font-size:50px;">
-          <i :class="isPlaying ? 'bi-pause-fill' : 'bi-play-fill'" style="font-size: 50px;"></i>
-        </button> -->
 
 
+        <button @click="playPreviousSong" class="button-custom">
+          <i class="bi bi-skip-start-fill" style="font-size:35px"></i>
+        </button>
+        
+        
+        <!-- Play/Pause button remains unchanged -->
         <button @click="playPause" class="button-custom">
-          <img src="@/assets/icons/music/pause01.png"  v-if="!isPlaying" style="width: 30px"/>
-          <img src="@/assets/icons/music/play01.png" v-if="isPlaying" style="width: 30px" />
-          <!-- <i class="bi bi-pause-fill" v-if="isPlaying(song)"></i> -->
+          <img src="@/assets/icons/music/pause01.png" v-if="!isPlaying" style="width: 40px"/>
+          <img src="@/assets/icons/music/play01.png" v-if="isPlaying" style="width: 40px" />
         </button>
 
-        <div class="current-song-info-text">
-          <span v-if="eventBus.selectedSong && eventBus.selectedSong.cover">
-            <img :src="eventBus.selectedSong.cover" alt="Song Cover" class="song-cover-image" style="width: 75px;"/>
+
+        <!-- Updated button for skipping to the next song -->
+        <button @click="playNextSong" class="button-custom">
+          <i class="bi bi-skip-end-fill" style="font-size:35px"></i>
+        </button>
+
+
+        <div 
+          v-if="eventBus.selectedSong && eventBus.selectedSong.cover"
+          class="current-song-info-text">
+          <span>
+
+            <img 
+              :src="eventBus.selectedSong.cover" 
+              alt="Song Cover" 
+              class="song-cover-image" 
+              style="width: 75px;"
+            />
           </span>
           &nbsp;&nbsp;&nbsp;
           {{ eventBus.selectedSong ? eventBus.selectedSong.title : '' }} <br />
@@ -44,93 +61,205 @@
             @mouseenter="showVolumeBar = true"
             @mouseleave="showVolumeBar = false"
           >
-            <input type="range" min="0" max="100" @input="changeVolume" class="volume-slider" />
+            <input 
+              type="range" 
+              min="0" 
+              max="100"
+              @input="changeVolume" 
+              class="volume-slider" 
+            />
           </div>
         </div>
       </div>
 
+      <div class="sound-bar-hover-key-desc button-custom">
+        <i class="bi bi-question-circle-fill">
+          <div class="popup">
+            <div class="sound-bar-popup-style">
+
+            <h3 style="font-style: normal; font-weight: 600; color: white;"> 키보드 단축키 안내</h3>
+            <br />
+          
+            <div class="common-button-style-keyboard-all">
+
+              <div class="common-button-style-keyboard-width">
+                <div class="common-button-style-keyboard"> 
+                  Z 
+                </div>
+                <div class="common-button-style-keyboard-desc"> 
+                  노래 재생목록 창 열기 / 닫기
+                </div>
+              </div>
+              
+              <div class="common-button-style-keyboard-width">
+                <div class="common-button-style-keyboard"> 
+                  Space bar
+                </div>
+                <div class="common-button-style-keyboard-desc"> 
+                  재생 / 일시정지
+                </div>
+              </div>
+
+
+              <div class="common-button-style-keyboard-width">
+                <div class="common-button-style-keyboard"> 
+                  X
+                </div>
+                
+                &nbsp; &nbsp;
+
+                <div class="common-button-style-keyboard"> 
+                  C
+                </div>
+                <div class="common-button-style-keyboard-desc"> 
+                  이전 곡 / 다음 곡
+                </div>
+              </div>
+
+
+              <div class="common-button-style-keyboard-width">
+                <div class="common-button-style-keyboard"> 
+                  D
+                </div>
+                <div class="common-button-style-keyboard-desc"> 
+                  곡 삭제
+                </div>
+              </div>
+
+
+              <div class="common-button-style-keyboard-width">
+                <div class="common-button-style-keyboard"> 
+                  -
+                </div>
+
+                &nbsp; &nbsp;
+                
+                <div class="common-button-style-keyboard"> 
+                  +
+                </div>
+                
+                <div class="common-button-style-keyboard-desc"> 
+                  볼륨 조절
+                </div>
+              </div>
+
+
+              <div class="common-button-style-keyboard-width">
+                <div class="common-button-style-keyboard"> 
+                  M 
+                </div>
+                <div class="common-button-style-keyboard-desc"> 
+                  음소거
+                </div>
+              </div>
+
+            </div>
+            </div>
+          </div>
+        </i>
+      </div>
+      
+      &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;
+
       <button class="button-custom" @click="playlistModalOpen">
-        <i class="bi bi-music-note-list" style="font-size: 30px;"></i>
+        <i class="bi bi-music-note-list" style="font-size: 30px;">
+        </i>
       </button> 
       <div
          v-if="openModal === true"
-         style="position: fixed; background-color: black; color: white;  width: 400px; height: 80vh; right: 0;  top: 120px; bottom:100px; z-index: 99;  display: flex; background-color:#202020; border-left:1px solid #333"
+         style="
+          position: fixed; 
+          background-color: black; 
+          color: white;  
+          width: 400px; 
+          height: 90vh; 
+          right: 0;  
+          top: 40px; bottom:100px; z-index: 99;  display: flex; background-color:#202020; border-left:1px solid #333"
         >
 
-        <!-- <div style="min-width: 400px; display: flex; color: white; "> -->
-          <!-- <span style="line-height: 40px"> 유저의 플레이리스트 </span> -->
-        <!-- <span
-          @click="playlistModalOpen" 
-          > 닫기
-        </span> -->
-        <!-- </div> -->
-        
         <ul class="user-playlist">
-            <li
-              v-for="(song, index) in playlist"
-              :key="song.id"
-              class="user-playlist-item"
-              @click="userlistPlay(song.music, index)"
-              :class="{ 'current-song': currentSongIndex === index }"
-            >
-              <div class="user-playlist-info" style="align-items:center">
-                <div class="user-playlist-no">
-                  {{ index }}
-                </div>
-                <div class="user-playlist-meta" style="display: flex; align-items:center" >
-                  <img :src="song.music.cover" alt="앨범 자켓" style="width:50px; height: 50px; font-size:1rem; margin-right: 20px; color: #333"/>
-                  <div style="flex-direction: column; left; font-size:0.8em; cursor: pointer">
-                    {{ song.music.title }} <br />
-                    {{ song.music.description }}
-                  </div>
-                </div>
-              </div>
-            </li>
-          </ul>
-     <div class="playlist-modal-container">
-        <!-- <div class="" style="display: flex; margin:0 auto;"> 
-          <img :src="list.music.cover" alt=list.music.title width="50px" />
-          {{ list.music.title }}
-        </div> -->
-      </div>
-    </div>
-    </div>
+            <div 
+              class="swiper-curated-flex" 
+              style="
+                width: 90%; 
+                display: flex; 
+                flex-wrap: wrap; 
+                justify-content: space-between; 
+                align-items: center; 
+                margin: 0 auto; 
+                margin-top: 20px;
+                ">
+                
+                <router-link to='/' style="color: white; text-decoration: none;">
+                  <h3>
+                      플레이 리스트
+                  </h3>
+                </router-link>
+              
+                <p style="color: white; align-self: flex-end; margin: 0;">
+                  <button 
+                    @click="playlistModalOpen" 
+                    style="
+                      background-color: transparent; 
+                      border: none; 
+                      color: white;"
+                    >
+                    닫기
+                  </button>
+                </p>
+            </div>
 
-    <!-- <PlaylistModal v-if="showModal" @close="showModal = false" class="playlist-modal">
-      <template v-slot:header>
-        <h3>플레이 리스트</h3>
-      </template>
-      <template v-slot:body>
-        <div class="playlist-body">
-            <ul class="user-playlist">
               <li
                 v-for="(song, index) in playlist"
                 :key="song.id"
                 class="user-playlist-item"
                 @click="userlistPlay(song.music, index)"
+                @mouseover="hoveredIndex = index"
+                @mouseleave="hoveredIndex = null"
                 :class="{ 'current-song': currentSongIndex === index }"
               >
-                <div class="user-playlist-info">
-                  <div class="user-playlist-no">
-                    {{ index }}
-                  </div>
-                  <div class="user-playlist-meta">
-                    {{ song.music.title }} <br />
-                    {{ song.music.description }}
-                  </div>
+              <div class="user-playlist-info" style="align-items:center">
+                <div class="user-playlist-no">
+                  {{ index }}
                 </div>
-              </li>
-            </ul>
-        </div>
-      </template>
-    </PlaylistModal> -->
+              
+                <div 
+                  class="user-playlist-meta" 
+                  style=" 
+                    display: flex; 
+                    align-items:center" 
+                >
+
+                <img :src="song.music.cover" alt="앨범 자켓" style="width:50px; height: 50px; font-size:1rem; margin-right: 20px; color: #333"/>
+                  <div 
+                    style="
+                      flex-direction: column; 
+                      font-size:0.8em; 
+                      cursor: pointer"
+                  >
+                    {{ song.id }}
+                      {{ song.music.title }} <br />
+                      {{ song.music.description }}
+                    </div>  
+                  </div>
+              </div>
+              <button 
+                @click.stop="deleteSong(song.music.id)" 
+                class="delete-button"
+              >
+                삭제
+            </button>
+            </li>
+          </ul>
+    </div>
+    </div>
   </div>
 </template>
 <script setup>
 import { ref, watch, onMounted, onBeforeUnmount } from 'vue';
 import WaveSurfer from 'wavesurfer.js';
 import eventBus from '@/eventBus';
-import PlaylistModal from '@/components/modal/PlaylistModal.vue';
+// import PlaylistModal from '@/components/modal/PlaylistModal.vue';
 import { useSongStore } from '@/stores/songStore';
 import axios from 'axios';
 
@@ -147,25 +276,22 @@ const currentSongIndex = ref(0);
 const currentTime = ref(0);
 const duration = ref(0);
 const openModal = ref(false);
-
-// const initModal = async () => {
-//   try {
-//     const token = localStorage.getItem('token');
-//     const response = await axios.get('http://localhost:80/playlist/userplayer', {
-//       headers: {
-//         Authorization: `Bearer ${token}`
-//       }
-//     });
-//     showModal.value = !showModal.value;
-//     playlist.value = response.data;
-//   } catch (error) {
-//     console.error('Error fetching playlist:', error);
-//   }
-// };
+const hoveredIndex = ref(null); // Add this ref
 
 
 
-const fetchPlaylist = async () => {
+onMounted(() => {
+    window.addEventListener('keydown', handleSpacebar);
+    window.addEventListener('keydown', muteController);
+    window.addEventListener('keydown', modalOpen);
+    window.addEventListener('keydown', playKeyboardController);
+    window.addEventListener('keydown', deleteSong);
+})
+
+
+// 스페이스바 이벤트 리스너 추가
+
+const initModal = async () => {
   try {
     const token = localStorage.getItem('token');
     const response = await axios.get('http://localhost:80/playlist/userplayer', {
@@ -179,6 +305,111 @@ const fetchPlaylist = async () => {
     console.error('Error fetching playlist:', error);
   }
 };
+
+
+function handleSpacebar(event) {
+      if (event.code === 'Space' && event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+        event.preventDefault();
+        playPause();
+      }
+      if (event.code === 'm') {
+        event.preventDefault();
+        playPause();
+      }
+};
+
+
+function modalOpen(event){
+  if (event.code === 'KeyZ' && event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+      event.preventDefault();
+      playlistModalOpen();
+    }
+  if (event.code === 'm') {
+    event.preventDefault();
+      playlistModalOpen();
+  }
+}
+
+watch(playlist, (newValue, oldValue) => {
+  fetchPlaylist();
+  // 원하는 로직 추가
+});
+
+
+
+function playKeyboardController(event){
+  if (event.code === 'KeyX' && event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+      event.preventDefault();
+      playPreviousSong();
+    }
+    if (event.code === 'KeyC' && event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+      event.preventDefault();
+      playNextSong();
+    }
+    // if (event.code === 'KeyD' && event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+    //   event.preventDefault();
+    //   deleteSong();
+    // }
+     if (event.code === 'm') {
+      event.preventDefault();
+      playPreviousSong();
+  }
+}
+
+const previousVolume = ref(0);
+
+
+
+function muteController(event) {
+  if (event.code === 'KeyM') {
+      toggleMute();
+    }
+}
+
+function volumneController(event) {
+  if (event.code === 'KeyM') {
+      toggleMute();
+    }
+}
+
+function toggleMute() {
+  const volume = wavesurfer.value.getVolume();
+    if (volume !== 0) {
+      // 현재 볼륨이 0이 아닐 때 (즉, 소리가 나고 있을 때)
+      previousVolume.value = volume; // 현재 볼륨을 저장
+      wavesurfer.value.setVolume(0)  // 볼륨을 0으로 설정 (뮤트)
+    } else {
+      // 현재 볼륨이 0일 때 (즉, 뮤트 상태일 때)
+      wavesurfer.value.setVolume(previousVolume.value); // 이전 볼륨으로 복원
+    }
+    this.wavesurfer.setVolume(volume);
+  }
+
+
+
+watch(eventBus.selectedSong, async (newQuestion, oldQuestion) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get('http://localhost:80/playlist/userplayer', {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      playlist.value = response.data;
+    } catch (error) {
+    } finally {
+    }
+})
+
+const setHoveredIndex = (index) => {
+  hoveredIndex.value = index;
+};
+
+// Clear the index when not hovering over any song
+const clearHoveredIndex = () => {
+  hoveredIndex.value = null;
+};
+
 
 const saveState = () => {
   const state = {
@@ -206,9 +437,59 @@ const loadState = () => {
   }
 };
 
+// const loadSong = (url) => {
+//   if (wavesurfer.value.isPlaying()) {
+//     wavesurfer.value.stop(); // 현재 재생 중인 노래를 중지
+//   }
+//   wavesurfer.value.load(url);
+//   wavesurfer.value.once('ready', () => {
+//     duration.value = wavesurfer.value.getDuration();
+//     wavesurfer.value.play();
+//     isPlaying.value = true;
+//     saveState();
+//   });
+// };
+
+
+const playPreviousSong = () => {
+  if (currentSongIndex.value > 0) {
+    currentSongIndex.value--;
+    eventBus.selectedSong = playlist.value[currentSongIndex.value].music;
+    loadSong(eventBus.selectedSong.link);
+  }
+  saveState();
+};
+
+
+const volumeStep = 0.1; // Define the step to increase or decrease the volume
+
+function increaseVolume() {
+  let newVolume = wavesurfer.value.getVolume() + volumeStep;
+  if (newVolume > 1) newVolume = 1; // Ensure volume doesn't go above 100%
+  wavesurfer.value.setVolume(newVolume);
+}
+
+function decreaseVolume() {
+  let newVolume = wavesurfer.value.getVolume() - volumeStep;
+  if (newVolume < 0) newVolume = 0; // Ensure volume doesn't go below 0%
+  wavesurfer.value.setVolume(newVolume);
+}
+
+
+// const playNextSong = () => {
+//   if (currentSongIndex.value < playlist.value.length - 1) {
+//     currentSongIndex.value++;
+//     eventBus.selectedSong = playlist.value[currentSongIndex.value].music;
+//     loadSong(eventBus.selectedSong.link);
+//   } else {
+//     isPlaying.value = false;
+//   }
+//   saveState();
+// };
+
 const loadSong = (url) => {
   if (wavesurfer.value.isPlaying()) {
-    wavesurfer.value.stop(); // 현재 재생 중인 노래를 중지
+    wavesurfer.value.stop(); // Stop the current song if it's playing
   }
   wavesurfer.value.load(url);
   wavesurfer.value.once('ready', () => {
@@ -219,7 +500,7 @@ const loadSong = (url) => {
   });
 };
 
-const playPause = () => {
+const playPause = (event) => {
   wavesurfer.value.playPause();
   isPlaying.value = !isPlaying.value;
   saveState();
@@ -243,6 +524,7 @@ const playNextSong = () => {
 
   const playlistModalOpen = () => {
     openModal.value = !openModal.value;
+    initModal();
   }
 
 const changeVolume = (event) => {
@@ -266,10 +548,23 @@ watch(
   { immediate: true }
 );
 
+
+watch(
+    () => eventBus.selectedSong,
+    (newSong) => {
+      if (newSong) {
+        loadSong(newSong.link);
+      }
+    },
+    { immediate: true }
+);
+
+
 watch(
   () => eventBus.playPause,
   (newPlayPause) => {
     if (newPlayPause) {
+      initModal();
       wavesurfer.value.play();
     } else {
       wavesurfer.value.pause();
@@ -286,6 +581,21 @@ watch(duration, (newDuration) => {
   eventBus.duration = newDuration;
 });
 
+watch(playlist, async (newDuration) => {
+  eventBus.duration = newDuration;
+});
+
+
+const fetchPlaylist = async () => {
+  const token = localStorage.getItem('token');
+  const response = await axios.get('http://localhost:80/playlist/userplayer', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+  playlist.value = response.data;
+};
+
 
 onMounted(() => {
   wavesurfer.value = WaveSurfer.create({
@@ -295,8 +605,6 @@ onMounted(() => {
     height: 50,
     barWidth:2,
   });
-
-  fetchPlaylist();
 
   wavesurfer.value.on('audioprocess', () => {
     currentTime.value = wavesurfer.value.getCurrentTime();
@@ -313,6 +621,49 @@ onMounted(() => {
 onBeforeUnmount(() => {
   saveState(); // Save state before the component unmounts
 });
+
+
+
+
+async function deleteSong(songId) {
+  const token = localStorage.getItem('token')
+  try {
+        await axios.delete(`http://localhost:80/playlist/songs/${songId}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+    fetchPlaylist();
+  } catch (error) {
+    console.error('Failed to delete song:', error);
+  }
+};
+
+
+
+
+function handleKeydown(event) {
+  if (event.key === 'd' && hoveredIndex.value !== null) {
+    const songId = playlist.value[hoveredIndex.value].music.id;
+    deleteSong(songId);
+  }
+  else if (event.key === '-' && event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+    // Check if the '-' key was pressed
+    decreaseVolume();
+  } else if (event.key === '=' && event.target.tagName !== 'INPUT' && event.target.tagName !== 'TEXTAREA') {
+    // Check if the '=' key was pressed
+    increaseVolume();
+  }
+}
+
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeydown);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('keydown', handleKeydown);
+});
 </script>
 
 <style>
@@ -324,7 +675,7 @@ onBeforeUnmount(() => {
   z-index: 99999;
 }
 
-#current-song-info {
+#current-song-info\- {
 }
 
 .current-song-info {
@@ -402,15 +753,11 @@ onBeforeUnmount(() => {
 }
 
 
-/* MODAL */ 
+/* 유저 고유 플레이 리스트 목록 */ 
 
 .playlist-modal {
   height: 100%;
 }
-
-.modal-container {
-}
-
 
 .scroll p {
   font-size: 2rem;
@@ -418,14 +765,13 @@ onBeforeUnmount(() => {
   background: #febf00;
 }
 
-/* 스크롤바 생성 */
 .playlist-body {
   flex-grow: 1;
   overflow-y: auto;
 }
 
 .playlist-body::-webkit-scrollbar {
-  display: none; /* 웹킷 기반 브라우저 */
+  display: none;
 }
 
 .playlist-modal header,
@@ -434,21 +780,19 @@ onBeforeUnmount(() => {
   border-bottom: 1px solid #ccc;
 }
 
-.modal-body {
-}
 .playlist-modal .modal-footer {
   position: sticky;
   bottom: 0;
-  background: #202020; /* 필요한 경우 다른 배경색으로 변경 */
+  background: #202020;
   padding: 10px;
-  text-align: right; /* 필요한 경우 다른 정렬 방식으로 변경 */
+  text-align: right;
 }
 
 .user-playlist {
   list-style: none;
   padding: 0;
   margin: 0;
-  overflow-y: auto
+  overflow-y: auto;
 }
 
  
@@ -488,12 +832,82 @@ onBeforeUnmount(() => {
   float: left;
 }
 
-.current-song .user-playlist-no {
-  /* color: blue; */
+ 
+.bi-question-circle-fill {
+  position: relative; 
+  font-size: 30px;
 }
 
-.modal-body {
-  /* overflow-y: auto; */
+
+.popup {
+  display: none;
+  position: absolute;
+  background-color: #333;
+  padding: 10px;
+  margin-right: 200px;
+  bottom: 60px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 99999;
 }
 
+
+.bi-question-circle-fill:hover .popup {
+  display: block;
+}
+
+.bi-question-circle-fill:hover {
+  color: #FFC200;
+  font-weight: 600;
+}
+
+
+
+.common-button-style-keyboard-all {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.common-button-style-keyboard {
+  align-items: center;
+  text-align: center;
+  padding-top: 12px;
+  background-color: #FFC200;
+  color: #333;
+  font-size: 1.2em;
+  font-weight: 600;
+  font-style: normal;
+  border-radius: 10px;
+  padding: 10px 20px;
+}
+
+.common-button-style-keyboard-desc {
+  float: right;
+  text-align: end;
+  margin-bottom: 20px;
+  margin-left: auto;
+  font-style: normal;
+  font-size: 1.2rem;
+  color: white;
+}
+
+.sound-bar-popup-style {
+  width: 480px;
+  padding: 50px;
+}
+
+.common-button-style-keyboard-width {
+  width: 100%;
+  display: flex;
+  margin: 10px 0;
+}
+
+.delete-button{
+  width: 200px;
+  color: white;
+  background-color: transparent;
+  border: none;
+  align-items: center;
+}
 </style>

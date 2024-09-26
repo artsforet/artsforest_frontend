@@ -12,7 +12,7 @@ const maxPages = 10; // 최대 페이지 수
 
 const fetchAlbum = async () => {
   try {
-    const response = await axios.get("http://localhost:80/music/soundfactory/album");
+    const response = await axios.get("http://localhost:80/music/soundfactory/artsForestAlbum");
     albumList.value = response.data;
 
     // 모든 노래 목록을 수집

@@ -229,7 +229,7 @@ onMounted(() => {
 
 .purchase-section {
   text-align: center;
-  margin-top: 20px;
+  margin: 20px auto ;
 }
 
 .purchase-section button {
@@ -237,7 +237,7 @@ onMounted(() => {
   border: none;
   color: #fff;
   padding: 10px 20px;
-  border-radius: 5px;
+  border-radius: 10px;
   font-size: 1.2em;
 }
 
@@ -247,18 +247,22 @@ onMounted(() => {
 }
 
 .music-ticket {
-    width: 1128px;
+    width: 1200px;
     background:linear-gradient(230deg, #f11b63 57%, #e26c37 80%);
     height: 100px;
-}
+    text-align: center;
+    margin:0 auto;
+    justify-content: center;
+  }
 
 .music-ticket-inner {
-    width: 200px;
+    width: 180px;
     border-radius: 25px;
     background-color: white;
     color: black;
-    margin: 10px auto;
-    padding: 5px 0;
+    margin: 0 20px 0 20px;
+    padding: 3px 0;
+    border: none;
 }
 
 .song-meta-number {
@@ -274,7 +278,7 @@ onMounted(() => {
   font-size: 16px;
   font-weight: 500;
   font-size: 14px;
-  white-space: nowrap; /* Prevents text from wrapping */
+  /* white-space: nowrap; /* Prevents text from wrapping */
   overflow: hidden; /* Ensures the element doesn't grow beyond its content */
   text-overflow: ellipsis; /* Adds ellipsis if text overflows */
 }

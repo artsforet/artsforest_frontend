@@ -1,5 +1,6 @@
 <template>
 <div class="footer-container">
+    <div style="width: 100%; height: 1px; border:0.5px solid rgba(255,255,255, 0.1 )"></div>
     <div class="footer-wrapper">
         <div class="footer-nav">
             <nav>
@@ -25,7 +26,7 @@
 <style scoped>
 .footer-container {
     width: 100%;
-    height: 40vh;
+    height: 25vh;
     background-color: #202020;
     text-align: start;
     z-index: 99999999;

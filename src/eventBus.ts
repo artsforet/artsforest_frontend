@@ -2,6 +2,7 @@
 import { reactive } from 'vue';
 
 const eventBus = reactive({
+  playlist: [],
   selectedSong: null,
   playPause: false,
   currentTime: 0,

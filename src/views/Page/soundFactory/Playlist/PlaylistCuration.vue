@@ -167,7 +167,7 @@ onMounted(() => {
             :src="curationItem.cover" 
             @click="() => addToPlaylistAndPlayFirst(curationItem)"
             alt="Album Cover" 
-            class="album-cover"
+            class="playlist-curation"
           >
           <br />
           {{ curationItem.name }}
@@ -190,7 +190,7 @@ onMounted(() => {
 </div>
 </template>
 
-<style>
+<style scoped>
 
 .song-curation-layout {
   width: 100%;
@@ -203,6 +203,7 @@ onMounted(() => {
 .song-curation-page {
   width: 1300px;
   margin: 0 auto;
+  padding-top: 100px;
 }
 
 .song-curation-album-item .grid-container {
@@ -217,9 +218,9 @@ onMounted(() => {
   text-align: center;
 }
 
-.album-cover {
-  width: 300px;
-  height: 300pxz;
+.playlist-curation {
+  width: 256px;
+  height: 256px;
   height: auto;
   object-fit: cover;
 }
@@ -268,7 +269,7 @@ onMounted(() => {
   animation: spin 1s ease-in-out infinite;
   margin: 0 auto;
   justify-content: center;
-  text-align: center;;
+  text-align: start;
   -webkit-animation: spin 1s ease-in-out infinite;
 }
 

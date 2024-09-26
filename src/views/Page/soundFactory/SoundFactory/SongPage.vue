@@ -1,8 +1,8 @@
 <template>
-  <div class="song-common-layout">
+  <div class="soundfactory-cate-song-page">
     <br /><br /><br /> <br /><br />
     <div class="song-common-page">
-      <h2 style="font-weight:600">곡 > BGM </h2>
+      <h2 style="font-weight:600">곡 > SOUND FACTORY </h2>
       <p style="color: #FFC200"> 템포 전체 | 길이 전체 </p>
       <br />
       <div class="song-list">
@@ -25,7 +25,11 @@
               <div style="font-size:13px; color: #888">{{ song.description }}</div>
             </router-link>
             <div class="song-tags">
-              <span v-for="tag in song.tags" :key="tag" class="song-tag">
+              <span 
+                v-for="tag in song.tags" 
+                :key="tag" 
+                class="song-tag"
+                hjv c>
                 #{{tag}} 
               </span>
             </div>
@@ -35,6 +39,7 @@
           </div>
           <div class="time-info" :class="{ playing: eventBus.selectedSong && eventBus.selectedSong.id === song.id }">
             <span class="current-time" v-if="eventBus.selectedSong && eventBus.selectedSong.id === song.id">{{ formatTime(eventBus.currentTime) }} / </span>
+            &nbsp;
             <span class="total-time">{{ formatTime(song.duration) }}</span>
           </div>
           <div class="song-actions">
@@ -78,6 +83,7 @@ import eventBus from '@/eventBus';
 import axios from "axios";
 import fillheart from '@/assets/icons/fill-heart.png';
 import nofillheart from '@/assets/icons/no-fill-heart.png';
+import { useRouter } from 'vue-router';
 
 const downloadStore = useDownloadStore();
 const download = ref();
@@ -103,11 +109,12 @@ const fetchAlbumSongs = async (albumId) => {
 const playPauseSong = async (song) => {
   const token = localStorage.getItem('token');
   try {
-    await axios.post(`http://localhost:80/playlist/add/${song.id}`, {}, {
+   const response = await axios.post(`http://localhost:80/playlist/add/${song.id}`, {}, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
+    eventBus.selectedSong = response.data;
   } catch (error) {
     console.error(error);
   }
@@ -122,7 +129,10 @@ const playPauseSong = async (song) => {
 
 const userId = ref(localStorage.getItem('userId')); 
 const token = localStorage.getItem('token');
- 
+const router = useRouter();
+
+
+
 
 const toggleLikes = async (song) => {
   const token = localStorage.getItem('token');
@@ -157,7 +167,6 @@ onMounted(() => {
 const isPlaying = (song) => {
   return eventBus.selectedSong && eventBus.selectedSong.id === song.id && eventBus.playPause;
 };
-
 
 const initializeWaveSurfer = () => {
   paginatedSongs.value.forEach((song) => {
@@ -197,15 +206,24 @@ const initializeWaveSurfer = () => {
 
 const fetchArtistDownloads = async (song) => {
   const token = localStorage.getItem('token');
+  if (!token) {
+    console.error('No token found');
+    return;
+  }
   try {
-    const response = await axios.get(`http://localhost:80/music/downloads/artist/${song}`, {
+    const encodedSong = encodeURIComponent(song);
+    const response = await axios.get(`http://localhost:80/music/downloads/artist/${encodedSong}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
-    downloads.value = response.data;
+    if (response.data && Array.isArray(response.data)) {
+      downloads.value = response.data;
+    } else {
+      console.error('Unexpected response format');
+    }
   } catch (error) {
-    console.error('Failed to fetch artist downloads:', error);
+    console.error('Failed to fetch artist downloads:', error.response ? error.response.data : error.message);
   }
 };
 
@@ -258,7 +276,6 @@ const formatTime = (seconds) => {
   return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
 };
 
-
 const downloadMp = async (song) => {
   try {
     const response = await fetch(song.link); // song.link를 URL로 사용하여 fetch 요청을 보냄
@@ -272,29 +289,34 @@ const downloadMp = async (song) => {
     const link = document.createElement('a');
     link.href = url;
     link.setAttribute('download', fileName);
-    alert(url)
-    const token = localStorage.getItem('token');
-    // URL 해제
-    window.URL.revokeObjectURL(url);
+
     if(song.isPublic === true){
-    // 링크를 클릭하여 파일 다운로드
+      // 링크를 클릭하여 파일 다운로드
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
 
-      axios.post(`http://localhost:80/music/download/${song.id}`, {}, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
+      const token = localStorage.getItem('token');
+      try {
+        await axios.post(`http://localhost:80/music/download/${song.id}`, {}, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      } catch (axiosError) {
+        console.error('Axios request failed:', axiosError);
+      }
+
+      // URL 해제
+      window.URL.revokeObjectURL(url);
     } else {
-      alert('결제 페이지로 이동합니다.')
+     router.push('/cart/shop')
+     alert('결제 페이지로 이동합니다.')
     }
   } catch (error) {
     console.error('File download failed:', error);
   }
 }
-
 
 onMounted(() => {
   fetchAlbumSongs();
@@ -320,13 +342,12 @@ div {
   margin: 0;
   padding: 0;
 }
-.song-common-layout{
+.soundfactory-cate-song-page{
   width: 100%;
-  height: 100%;
+  height: 100vh;
   background-color: rgb(26, 26, 26);
   color: white;
   position: rrelative;
-  padding-bottom: 100px;
 }
 
 .song-common-page {

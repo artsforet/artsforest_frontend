@@ -1,13 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import HomeView from '../views/HomeView.vue';
+import VoucherView from '@/views/VoucherView.vue';
 import LoginPage from "@/views/User/Login/LoginPage.vue";
+import RegisterPage from "@/views/User/Login/RegisterPage.vue";
 import UploadPage from "@/views/Bgm/Upload/UploadPage.vue";
 import PlayList from "@/views/Playlist/PlayList.vue";
 import AlbumPage from '@/views/Page/soundFactory/SoundFactory/AlbumPage.vue';
 import SongPage from "@/views/Page/soundFactory/SoundFactory/SongPage.vue";
 import SfxEffect from "@/views/Page/soundFactory/SFX/SfxEffect.vue";
 
-import PlaylistLastSong from "@/views/Page/soundFactory/Playlist/PlaylistLastSong.vue";
+import PlaylistLastSong from '@/views/Page/soundFactory/Playlist/PlaylistLastSong.vue';
 import PlaylistCuration from "@/views/Page/soundFactory/Playlist/PlaylistCuration.vue";
 
 import SfxPolysound from "@/views/Page/soundFactory/SFX/SfxPolysound.vue";
@@ -20,16 +22,26 @@ import FreeYard from "@/views/Page/soundFactory/Free/FreeYard.vue";
 
 
 import AlbumDetail from '@/views/Page/Music/AlbumDetail.vue';
+
 import SongDetail from '@/views/Page/Music/SongDetail.vue';
 import SongAmdin from '@/views/Admin/SongAdmin.vue';
+
+import LastSong from '@/views/Admin/LastSong.vue';
+import LastsongDelete from '@/views/Admin/LastsongDelete.vue';
+
 import CurationDelete from '@/views/Admin/CurationDelete.vue';
-import HomeAdmin from '@/views/Admin/HomeAdmin/HomeAdmin.vue';
+import HomeAdmin from '@/views/Admin/HomeAdmin/HomeAdmin.vue'
+;
 import AdminMaster from '@/views/Admin/AdminMaster.vue';
 import PdAdmin from '@/views/Admin/PdAdmin.vue';
 import MyPage from '@/views/Admin/MyPage.vue';
 
 import PdHome from '@/views/Page/etcPage/PdHome.vue';
 import SeriesMusic from '@/views/Page/soundFactory/SeriesMusic.vue';
+import NoticePage from '@/views/Notice/NoticePage.vue';
+import CartPage from '@/views/Page/CartPage.vue';
+import BankPage from '@/views/Cart/BankPage.vue';
+import MyMusic from '@/views/Page/MyMusic.vue';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -46,7 +58,9 @@ const router = createRouter({
       children: [
         { path: 'curation', name: 'songAdmin', component: SongAmdin },
         { path: 'curation/delete', name: 'curationDelete', component: CurationDelete },
-        { path: 'pdadmin', name: 'pdAdmin', component: PdAdmin }
+        { path: 'pdadmin', name: 'pdAdmin', component: PdAdmin },
+        { path: 'lastsong', name: 'lastSong', component: LastSong },
+        { path: 'lastsong/delete', name: 'lastsongDelete', component: LastsongDelete }
       ],
     },
     {
@@ -58,6 +72,11 @@ const router = createRouter({
       path: '/login',
       name: 'loginPage',
       component: LoginPage
+    },
+    {
+      path: '/register',
+      name: 'registerPage',
+      component: RegisterPage
     },
     {
       path: '/upload',
@@ -89,6 +108,11 @@ const router = createRouter({
       path: '/playlist/curation',
       name: 'playlistCuration',
       component: PlaylistCuration,
+    },
+    {
+      path: '/playlist/lastsong',
+      name: 'playlistLastsong',
+      component: PlaylistLastSong,
     },
     {
       path: '/artsforest/song',
@@ -146,7 +170,32 @@ const router = createRouter({
       path: '/myPage',
       name: 'myPage',
       component: MyPage
-    }
+    },
+    {
+      path: '/voucher',
+      name: 'vouxcherView',
+      component: VoucherView,
+    },
+    {
+      path: '/notice/board',
+      name: 'noticePage',
+      component: NoticePage,
+    },
+    {
+      path: '/cart/shop',
+      name: 'cartPage',
+      component: CartPage,
+    },
+    {
+      path: '/cart/bank',
+      name: 'BankPage',
+      component: BankPage,
+    },
+    {
+      path: '/admin/myMusic',
+      name: 'MyMusic',
+      component: MyMusic,
+    },
   ],
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) {

@@ -1,24 +1,78 @@
 <template>
 <div class="main-swiper-container">
   <swiper  
+  :a11y="{
+    enabled: true,
+    prevSlideMessage: '이전 슬라이드',
+    nextSlideMessage: '다음 슬라이드',
+    firstSlideMessage: '첫 번째 슬라이드',
+    lastSlideMessage: '마지막 슬라이드',
+    paginationBulletMessage: '슬라이드 {{index}} 로 이동',
+  }"
+  :keyboard="{
+    enabled: true,
+    onlyInViewport: true,
+  }"
       :navigation="{
         nextEl: '.main-button-next',
         prevEl: '.main-button-prev',
       }"
+    :aria="{
+    slideLabelMessage: '슬라이드 {{index}} 중 {{slidesLength}}',
+    containerMessage: '이미지 슬라이더',
+    roleDescriptionMessage: '슬라이드쇼',
+    }"
     :modules="modules" 
     class="mainSwiper">
-    <swiper-slide style=" background-color: rgba(239,239,239, 1) ">
+    
+    <swiper-slide 
+      role="group" 
+      aria-label="슬라이드 1"
+      aria-hidden="false" 
+      style="background-color: rgba(239,239,239, 1)"
+    >
+      
       <img :src="image1" alt="Example Image" width="1920px"/>
     </swiper-slide>
-    <swiper-slide class="main-swiper-slide-">Slide 1</swiper-slide>
-    <swiper-slide>Slide 2</swiper-slide>
-    <swiper-slide>Slide 3</swiper-slide>
-    <swiper-slide>Slide 4</swiper-slide>
-     <div class="main-button-prev">
+
+    <swiper-slide 
+      role="group" 
+      aria-label="슬라이드 1"
+      aria-hidden="false" 
+      class="main-swiper-slide-"
+    >
+      Slide 1
+    </swiper-slide>
+    
+    <swiper-slide
+      role="group" 
+      aria-label="슬라이드 1"
+      aria-hidden="false" 
+    >
+      Slide 2
+    </swiper-slide>
+    
+    <swiper-slide
+      role="group" 
+      aria-label="슬라이드 1"
+      aria-hidden="false" 
+    >
+      Slide 3
+    </swiper-slide>
+    
+    <swiper-slide
+      role="group" 
+      aria-label="슬라이드 1"
+      aria-hidden="false" 
+    >
+      Slide 4
+    </swiper-slide>
+    
+    <div class="main-button-prev" tabindex="0" aria-label="이전 슬라이드">
         <i class="bi bi-chevron-left"></i>
       </div>
-      <div class="main-button-next">
-      <i class="bi bi-chevron-right"></i>
+      <div class="main-button-next" tabindex="0" aria-label="다음 슬라이드">
+        <i class="bi bi-chevron-right"></i>
       </div>
   </swiper>
 
@@ -28,9 +82,8 @@
 <style scoped>
 .main-swiper-container {
   width: 100%;
-  height: 400px;
   color: black;
-  margin-top:50px;
+  padding-top: 50px;;
 }
 
 .swiper {
@@ -48,7 +101,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: black;
+  color: white;
   position: relative;
 }
 
@@ -83,6 +136,7 @@
 .main-button-next:hover {
   background-color: white;
   color: black;
+  border: 1px solid #888;
 }
 
 

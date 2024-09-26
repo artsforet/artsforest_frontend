@@ -21,9 +21,11 @@ const submit = async (event: Event) => {
       username: username.value, 
       password: password.value
     })
-    localStorage.setItem('user', response.data.userData.username)
+    
+    localStorage.setItem('user', response.data.userData.username,)
     localStorage.setItem('userId', response.data.userData.id)
     localStorage.setItem('token', response.data.accessToken)
+    localStorage.setItem('authority', response.data.userData.authority)
     localStorage.setItem('wave_login', 'true')
     userStore.setUser(response.data.user);
     alert('로그인이 완료되었습니다.')
@@ -126,7 +128,7 @@ userStore.createPlaylist(username.value);
         <p v-if="loginMessage">{{ loginMessage }}</p>
       </form>
       <div class="signup-link">
-        <p>아직 회원이 아니신가요? <a href="#" class="link">회원가입</a></p>
+        <p>아직 회원이 아니신가요? <router-link to="/register" href="#" class="link">회원가입</router-link></p>
       </div>
       <div class="social-login">
         <p>소셜 로그인/회원가입</p>

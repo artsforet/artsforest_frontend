@@ -123,9 +123,23 @@
         <label for="year">발매일</label>
         <input type="date" id="year" v-model="musicData[selectedSongIndex].year" />
       </div>
+
+      <div class="metadata-form-group category-group">
+        <label for="isPublic">공개 여부</label>
+        <select id="isPublic" v-model="musicData[selectedSongIndex].isPublic">
+          <option :value="true">
+            public
+          </option>
+          <option :value="false">
+            private
+          </option>
+        </select>
+      </div>
     </div>
   </div>
 
+
+  
   <button type="submit" class="upload-button" :disabled="!canUpload" style="margin-top:50px;">Upload</button>
       </form>
       <div v-if="uploadSuccess" class="success-message">
@@ -198,7 +212,8 @@ export default {
         instrument: '',
         year: null,
         selectedCategories: [],
-        selectedAlbumseries: []
+        selectedAlbumseries: [],
+        isPublic: 'false',
       }));
       this.musicData = [...this.musicData, ...newMusicData];
       files.forEach((file, index) => {
@@ -231,6 +246,7 @@ export default {
         year: null,
         selectedCategories: [],
         tempo: 0,
+        isPublic: 'false',
       }));
       files.forEach((file, index) => {
         this.extractDuration(file, index),
@@ -267,10 +283,15 @@ export default {
     const coversFile = this.$refs.covers.files[0];
     const formData = new FormData();
 
+
+    if(!coversFile){
+      alert("이미지를 선택해주세요.");
+    }
     this.selectedFiles.forEach((file, index) => {
       const musicEntry = { ...this.musicData[index] };
       musicEntry.category = musicEntry.selectedCategories;
       musicEntry.series = musicEntry.selectedAlbumseries;
+      musicEntry.isPublic = musicEntry.isPublic;
 
       // Ensure tags is an array
       if (typeof musicEntry.tags === 'string') {
@@ -286,17 +307,27 @@ export default {
       formData.append('cover', coversFile);
     }
 
+    if (!coversFile) {
+      alert("앨범 커버를 선택해주세요.")
+    }
+
+
+
   try {
+
     const token = localStorage.getItem('token');
+    
     if (!token) {
       throw new Error('No token found');
     }
+    
     const response = await axios.post('http://localhost:80/music/upload', formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         Authorization: `Bearer ${token}`,
       },
     });
+   
     alert("업로드가 완료 되었습니다.");
     
     if (response.status === 200) {
@@ -319,8 +350,10 @@ export default {
 
 .upload-music-container {
   width: 100%;
+  min-height: 80vh;
+  padding-bottom: 200px;
   margin: auto;
-  padding-top: 50px;
+  padding-top: 100px;
   color: white;
   background-color: #212121;
 }

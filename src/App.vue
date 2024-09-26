@@ -2,12 +2,11 @@
   <div id="app">
     <!-- 메인 페이지 -->
     <div v-if="!hideNavBar" class='header-main'>
-      <HeaderContent  />
-      <HeaderComponent v-if="!hideNavBar"/>
+      <HeaderContent v-if="!hideNavBar"   />
+      <HeaderComponent v-if="!hideNavBar"  />
     </div>
-    <br /><br />
     <main class="main-content">
-    <router-view 
+    <router-view
       @songSelected="handleSongSelected" />
     </main>
     <!-- 하단 공통 MusicBar -->
@@ -26,27 +25,45 @@ import HeaderComponent from '@/components/common/header/HeaderComponent.vue';
 import PlayBar from '@/components/common/Waveform/PlayBar.vue';
 import FooterComponent from '@/components/Footer/FooterComponent.vue';
 import "/main.css";
-import { computed } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useRoute } from 'vue-router';
+import axios from "axios";
 
 function handleSongSelected(song) {
   this.selectedSong = song;
+  fetchPlaylist();
 }
 
 const route = useRoute();
 
 // 특정 경로에서 NavBar를 숨기도록 설정
 const hideNavBar = computed(() => {
-  return route.path === '/login'
+  return route.path === '/login' || route.path === '/register'
 });
+
+const fetchPlaylist = async () => {
+  const response = await axios.get('http://localhost:80/playlist/userplayer', {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
+}
+
 
 </script>
 
 <style>
+#app {
+  background-color: #202020;
+}
 .header-main {
 }
 
  
+.main-content {
+  width: 100%;
+  padding-top: 60px;
+}
  .common-player {
   padding-top: 100px;
  }

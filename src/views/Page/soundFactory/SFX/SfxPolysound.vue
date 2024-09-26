@@ -2,7 +2,7 @@
   <div class="song-common-layout">
     <br /><br /><br /> <br /><br />
     <div class="song-common-page">
-      <h2 style="font-weight:600">곡 > 폴리사운드 </h2>
+      <h2 style="font-weight:600"> 폴리사운드 > SFX </h2>
       <p style="color: #FFC200"> 템포 전체 | 길이 전체 </p>
       <br />
       <div class="song-list">
@@ -19,7 +19,9 @@
           </div>
           <div class="song-info">
             <router-link :to="{ name: 'SongDetail', params: { id: song.id } }">
-              <div class="item-title">{{ song.title }}</div>
+              <div class="item-title">{{ song.title }}
+               <span v-if="song.isPublic" style="background-color:#FFC200; color:#333;font-weight: 600; text-align:center; width:60px; font-size: 0.8rem; border-radius: 5px; padding: 2px">무료 음악</span>
+              </div>
               <div style="font-size:13px; color: #888">{{ song.description }}</div>
             </router-link>
             <div class="song-tags">
@@ -32,9 +34,9 @@
             <div class="waveform-container" :id="'waveform-' + song.id"></div>
           </div>
           <div class="time-info" :class="{ playing: eventBus.selectedSong && eventBus.selectedSong.id === song.id }">
-            <span class="current-time" v-if="eventBus.selectedSong && eventBus.selectedSong.id === song.id">{{ formatTime(eventBus.currentTime) }} / </span>
             <span class="total-time">{{ formatTime(song.duration) }}</span>
           </div>
+            <span class="current-time" v-if="eventBus.selectedSong && eventBus.selectedSong.id === song.id">{{ formatTime(eventBus.currentTime) }} / </span>
           <div class="song-actions">
             <button @click="playPauseSong(song)" class="button-custom">
               <i class="bi bi-play-fill" v-if="!isPlaying(song)"></i>
@@ -298,14 +300,14 @@ onMounted(() => {
   fetchAlbumSongs();
   const token = localStorage.getItem('token');
   
-  songStore.fetchSongs().then(() => {
+  songStore.fetchSfxPolysound().then(() => {
     initializeWaveSurfer();
   });
 });
 
 
 watch(currentPage, () => {
-  songStore.fetchSongs().then(() => {
+  songStore.fetchSfxPolysound().then(() => {
     initializeWaveSurfer();
   });
 });
@@ -323,6 +325,8 @@ div {
   height: 100vh;
   background-color: rgb(26, 26, 26);
   color: white;
+  position: rrelative;
+  padding-bottom: 100px;
 }
 
 .song-common-page {
